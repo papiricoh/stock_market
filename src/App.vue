@@ -8,6 +8,9 @@ export default {
   data() {
     return {
       page: "home",
+
+      //Market Variables
+      company_name: null,
     }
   },
 }
@@ -23,7 +26,7 @@ export default {
             <span>Resume</span>
           </a>
         </li>
-        <li v-else @click="page = 'home'">
+        <li v-else @click="page = 'home', company_name = null">
           <a>
             <span class="icon"><font-awesome-icon icon="fa-solid fa-home" /></span>
             <span>Resume</span>
@@ -35,7 +38,7 @@ export default {
             <span>Markets</span>
           </a>
         </li>
-        <li v-else @click="page = 'markets'">
+        <li v-else @click="page = 'markets', company_name = null">
           <a>
             <span class="icon"><font-awesome-icon icon="fa-solid fa-arrow-trend-up" /></span>
             <span>Markets</span>
@@ -47,7 +50,7 @@ export default {
             <span>Wallet</span>
           </a>
         </li>
-        <li v-else @click="page = 'wallet'">
+        <li v-else @click="page = 'wallet', company_name = null">
           <a>
             <span class="icon"><font-awesome-icon icon="fa-solid fa-wallet" /></span>
             <span>Wallet</span>
@@ -59,13 +62,37 @@ export default {
 
     </div>
     <div id="markets" v-if="page == 'markets'">
-      <div>
-        <StockChart></StockChart>
+      <div class="markets_header">
+        <h1 class="title">Markets</h1>
       </div>
-      <div>
-        <SharesChart></SharesChart>
+      <hr>
+      <div class="markets_body">
+        <div class="markets_menu">
+          <aside class="box menu">
+            <p class="menu-label">
+              General
+            </p>
+            <ul class="menu-list">
+              <li><a @click="company_name = 'Rockson Energy'">Rockson Energy</a></li>
+              <li><a>Company 2</a></li>
+            </ul>
+          </aside>
+        </div>
+        <div class="box markets_graphs">
+          <div v-if="company_name != null">
+            <div class="subtitle">{{ company_name }}</div>
+            <div class="company_data_box">
+              <div class="company_data_element">Share price</div>
+            </div>
+            <div>
+              <StockChart></StockChart>
+            </div>
+            <div>
+              <SharesChart></SharesChart>
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
     <div class="wallet" v-if="page == 'wallet'">
 

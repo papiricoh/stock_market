@@ -1,1 +1,28 @@
 @import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";
+
+body {
+    background-color: rgb(253, 253, 253);
+}
+
+.markets_header {
+    color: black;
+    text-align: center;
+}
+
+.markets_body {
+    display: flex;
+}
+
+.markets_menu {
+    width: 30%;
+    margin: 4px;
+}
+
+.markets_graphs {
+    width: 70%;
+    margin: 4px;
+}
+
+.company_data_box {
+    display: flex;
+}

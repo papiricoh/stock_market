@@ -29,6 +29,6 @@ export default {
 
 <template>
   <div>
-    <apexchart width="500" type="area" :options="options" :series="series"></apexchart>
+    <apexchart width="800" type="area" :options="options" :series="series"></apexchart>
   </div>
 </template>
