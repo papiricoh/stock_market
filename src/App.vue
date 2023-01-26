@@ -11,6 +11,10 @@ export default {
 
       //Market Variables
       company_name: null,
+
+      companies: [
+        {label: 'RCKE',name: "Rockson Energy", share_price: 20000, total_shares: 1000000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000]}
+      ]
     }
   },
 }
@@ -73,7 +77,7 @@ export default {
               General
             </p>
             <ul class="menu-list">
-              <li><a @click="company_name = 'Rockson Energy'">Rockson Energy</a></li>
+              <li><a @click="company_name = 'RCKE - Rockson Energy'">RCKE</a></li>
               <li><a>Company 2</a></li>
             </ul>
           </aside>
