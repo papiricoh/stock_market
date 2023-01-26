@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      series: [60, 20, 5, 5, 10],
+      series: [623020, 402010, 20302, 3829, 92001],
       chartOptions: {
         chart: {
           width: 380,
@@ -11,6 +11,7 @@ export default {
         dataLabels: {
           enabled: false
         },
+        labels: ['Owner (NPC)', 'NPCs', 'Javier Calvo', 'John Doe', 'Juanito Estrella'],
         responsive: [{
           breakpoint: 480,
           options: {
