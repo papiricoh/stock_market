@@ -11,9 +11,12 @@ export default {
 
       //Market Variables
       company_name: null,
+      share_price: 1200,
+      num_of_shares: 100000,
+      market_cap: 120000000,
 
       companies: [
-        {label: 'RCKE',name: "Rockson Energy", share_price: 20000, total_shares: 1000000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000]}
+        { label: 'RCKE', name: "Rockson Energy", share_price: 20000, total_shares: 1000000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000] }
       ]
     }
   },
@@ -86,7 +89,18 @@ export default {
           <div v-if="company_name != null">
             <div class="subtitle">{{ company_name }}</div>
             <div class="company_data_box">
-              <div class="company_data_element">Share price</div>
+              <div class="company_data_element box">
+                <p>Share Price</p>
+                <b>${{ share_price }}</b>
+              </div>
+              <div class="company_data_element box">
+                <p>Total Shares</p>
+                <b>{{ num_of_shares }}</b>
+              </div>
+              <div class="company_data_element box">
+                <p>Market Cap</p>
+                <b>${{ market_cap }}</b>
+              </div>
             </div>
             <div>
               <StockChart></StockChart>
