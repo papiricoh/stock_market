@@ -8,6 +8,9 @@ export default {
   data() {
     return {
       page: "home",
+      full_user_name: "John Doe",
+      user_id: "steam:000000001",
+      money: 90000,
 
       //Market Variables
       company_name: null,
@@ -112,7 +115,7 @@ export default {
               </div>
             </div>
             <div class="company_data_box">
-              <div>
+              <div class="graph_box">
                 <div>
                   <StockChart></StockChart>
                 </div>
@@ -121,7 +124,23 @@ export default {
                 </div>
               </div>
               <div class="box movement_options">
-
+                <div class="buy-sell">
+                  <b class="a30-text">Buy/Sell</b>
+                  <input class="input is-medium" type="text" placeholder="Number of Shares">
+                  <div class="control">
+                    <label class="radio">
+                      <input type="radio" name="foobar" checked>
+                      Buy
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="foobar">
+                      Sell
+                    </label>
+                    <br>
+                    <button class="button is-link">Submmit</button>
+                  </div>
+                  <hr>
+                </div>
               </div>
             </div>
           </div>
