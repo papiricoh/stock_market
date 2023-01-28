@@ -1,6 +1,7 @@
 <script setup>
 import StockChart from './components/StockChart.vue'
 import SharesChart from './components/SharesChart.vue'
+import StockList from './components/StockList.vue'
 </script>
 
 <script>
@@ -18,6 +19,10 @@ export default {
       share_price: 1200,
       num_of_shares: 100000,
       market_cap: 120000000,
+
+      //Market Form
+      order_type: "ot",
+
 
       companies: [
         { label: 'RCKE', name: "Rockson Energy", share_price: 20000, total_shares: 1000000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000] }
@@ -129,17 +134,18 @@ export default {
                   <input class="input is-medium" type="text" placeholder="Number of Shares">
                   <div class="control">
                     <label class="radio">
-                      <input type="radio" name="foobar" checked>
+                      <input type="radio" v-model="order_type" value="Buy" checked>
                       Buy
                     </label>
                     <label class="radio">
-                      <input type="radio" name="foobar">
+                      <input type="radio" v-model="order_type" value="Sell" :value="sell">
                       Sell
                     </label>
                     <br>
                     <button class="button is-link">Submmit</button>
                   </div>
                   <hr>
+                  <StockList></StockList>
                 </div>
               </div>
             </div>
