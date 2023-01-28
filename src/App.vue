@@ -11,6 +11,7 @@ export default {
 
       //Market Variables
       company_name: null,
+      share_movement: 1, //0: down 1:neutral 2:up
       share_price: 1200,
       num_of_shares: 100000,
       market_cap: 120000000,
@@ -89,9 +90,17 @@ export default {
           <div v-if="company_name != null">
             <div class="subtitle">{{ company_name }}</div>
             <div class="company_data_box">
-              <div class="company_data_element box">
+              <div v-if="share_movement == 2" class="company_data_element box">
                 <p>Share Price</p>
-                <b>${{ share_price }}</b>
+                <b class="green"><font-awesome-icon icon="fa-solid fa-arrow-up" /> ${{ share_price }}</b>
+              </div>
+              <div v-if="share_movement == 1" class="company_data_element box">
+                <p>Share Price</p>
+                <b class="orange"><font-awesome-icon icon="fa-solid fa-minus" /> ${{ share_price }}</b>
+              </div>
+              <div v-if="share_movement == 0" class="company_data_element box">
+                <p>Share Price</p>
+                <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> ${{ share_price }}</b>
               </div>
               <div class="company_data_element box">
                 <p>Total Shares</p>
@@ -102,11 +111,18 @@ export default {
                 <b>${{ market_cap }}</b>
               </div>
             </div>
-            <div>
-              <StockChart></StockChart>
-            </div>
-            <div>
-              <SharesChart></SharesChart>
+            <div class="company_data_box">
+              <div>
+                <div>
+                  <StockChart></StockChart>
+                </div>
+                <div>
+                  <SharesChart></SharesChart>
+                </div>
+              </div>
+              <div class="box movement_options">
+
+              </div>
             </div>
           </div>
         </div>

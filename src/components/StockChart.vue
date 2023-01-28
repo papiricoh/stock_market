@@ -19,7 +19,7 @@ export default {
         }
       },
       series: [{
-        name: 'series-1',
+        name: 'Share Price',
         data: [12000, 12200, 13000, 11200, 10000, 9000, 8200, 10000, 18000, 14000, 16000, 20000]
       }]
     }

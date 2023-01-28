@@ -34,3 +34,21 @@ body {
     height: 100px;
     margin: 10px;
 }
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
+.orange {
+    color: orange;
+}
+.movement_options {
+    height: 50rem;
+    width: 38rem;
+    margin-top: 30px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
