@@ -22,6 +22,8 @@ export default {
 
       //Market Form
       order_type: "ot",
+      input_number_of_shares: 1,
+      input_share_price: 0,
 
 
       companies: [
@@ -131,10 +133,13 @@ export default {
               <div class="box movement_options">
                 <div class="buy-sell">
                   <b class="a30-text">Buy/Sell</b>
-                  <input class="input is-medium" type="text" placeholder="Number of Shares">
+                  <p>Number of Shares:</p>
+                  <input v-model.number="input_number_of_shares" class="input" type="text" placeholder="Number of Shares">
+                  <p>Share Price:</p>
+                  <input v-model="input_share_price" class="input" type="text" placeholder="Number of Shares">
                   <div class="control">
                     <label class="radio">
-                      <input type="radio" v-model="order_type" value="Buy" checked>
+                      <input type="radio" v-model.number="order_type" value="Buy" checked>
                       Buy
                     </label>
                     <label class="radio">
