@@ -27,10 +27,32 @@ export default {
 
 
       companies: [
-        { label: 'RCKE', name: "Rockson Energy", share_price: 20000, total_shares: 1000000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000] }
+        { label: 'RCKE', name: "Rockson Energy", share_price: 20000, total_shares: 1000000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000] },
+        { label: 'KIA', name: "Kiamoto Industry Agency", share_price: 1457, total_shares: 100000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203] },
+        { label: 'HUE', name: "Helios United Emporium", share_price: 123, total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123] }
       ]
     }
   },
+  components: {
+    StockChart,
+  },
+  methods: {
+    updateChart(data) {
+      this.$refs.stockChart.updateChart(data);
+    },
+    calculateMarketCap(price, tshares) {
+      this.market_cap = price * tshares;
+    },
+    checkChange(data) {
+      if (data[data.length - 1] > data[data.length - 2]) {
+        this.share_movement = 2;
+      }else if(data[data.length - 1] < data[data.length - 2]) {
+        this.share_movement = 0;
+      }else {
+        this.share_movement = 1;
+      }
+    } 
+  }
 }
 </script>
 
@@ -90,9 +112,8 @@ export default {
             <p class="menu-label">
               General
             </p>
-            <ul class="menu-list">
-              <li><a @click="company_name = 'RCKE - Rockson Energy'">RCKE</a></li>
-              <li><a>Company 2</a></li>
+            <ul class="menu-list" v-for="company in companies">
+              <li><a @click="(company_name = company.label + ' - ' + company.name), (share_price = company.share_price), (num_of_shares = company.total_shares), calculateMarketCap(company.share_price, company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{company.label}}</a></li>
             </ul>
           </aside>
         </div>
@@ -124,7 +145,7 @@ export default {
             <div class="company_data_box">
               <div class="graph_box">
                 <div>
-                  <StockChart></StockChart>
+                  <StockChart ref="stockChart"></StockChart>
                 </div>
                 <div>
                   <SharesChart></SharesChart>

@@ -15,13 +15,23 @@ export default {
           enabled: false
         },
         xaxis: {
-          categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+          categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,24,25,26,27,28,29,30,31]
         }
       },
       series: [{
         name: 'Share Price',
-        data: [12000, 12200, 13000, 11200, 10000, 9000, 8200, 10000, 18000, 14000, 16000, 20000]
+        data: [1]
       }]
+    }
+  },
+  methods: {
+    updateChart(data) {
+      let new_categories= [];
+      for (let index = 0; index < data.length + 1; index++) {
+        new_categories[index] = index + 1;
+      }
+      this.options.xaxis.categories = new_categories;
+      this.series[0].data = data;
     }
   }
 }
