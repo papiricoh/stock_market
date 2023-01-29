@@ -11,6 +11,7 @@ export default {
       page: "home",
       full_user_name: "John Doe",
       user_id: "steam:000000001",
+      has_company: -1,
       money: 90000,
 
       //Market Variables
@@ -52,7 +53,14 @@ export default {
       }else {
         this.share_movement = 1;
       }
-    } 
+    },
+    checkOwnership(owner_id) {
+      for (let index = 0; index < this.companies.length; index++) {
+        if(this.companies[index].owner == owner_id) {
+          this.has_company = index;
+        }
+      }
+    }
   }
 }
 </script>
@@ -103,7 +111,7 @@ export default {
             <span>Create Your Company</span>
           </a>
         </li>
-        <li v-else @click="page = 'creation', company_name = null">
+        <li v-else @click="page = 'creation', company_name = null, checkOwnership(user_id)">
           <a>
             <span class="icon"><font-awesome-icon icon="fa-solid fa-building" /></span>
             <span>Create Your Company</span>
