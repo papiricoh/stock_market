@@ -15,7 +15,8 @@ import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
-library.add(faUserSecret, faHome, faArrowTrendUp, faWallet, faArrowUp, faArrowDown, faMinus)
+import { faBuilding } from '@fortawesome/free-solid-svg-icons'
+library.add(faUserSecret, faBuilding, faHome, faArrowTrendUp, faWallet, faArrowUp, faArrowDown, faMinus)
 
 const app = createApp(App);
 app.use(VueApexCharts);

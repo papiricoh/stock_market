@@ -27,9 +27,10 @@ export default {
 
 
       companies: [
-        { label: 'RCKE', name: "Rockson Energy", share_price: 20000, total_shares: 1000000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000] },
-        { label: 'KIA', name: "Kiamoto Industry Agency", share_price: 1457, total_shares: 100000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203] },
-        { label: 'HUE', name: "Helios United Emporium", share_price: 123, total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123] }
+        { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230,14645,14562,14856,14952,14751,15230], owner: "NPC" },
+        { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC" },
+        { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203], owner: "NPC" },
+        { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC" }
       ]
     }
   },
@@ -96,6 +97,18 @@ export default {
             <span>Wallet</span>
           </a>
         </li>
+        <li class="is-active" v-if="page == 'creation'">
+          <a>
+            <span class="icon"><font-awesome-icon icon="fa-solid fa-building" /></span>
+            <span>Create Your Company</span>
+          </a>
+        </li>
+        <li v-else @click="page = 'creation', company_name = null">
+          <a>
+            <span class="icon"><font-awesome-icon icon="fa-solid fa-building" /></span>
+            <span>Create Your Company</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div id="home" v-if="page == 'home'">
@@ -113,7 +126,12 @@ export default {
               General
             </p>
             <ul class="menu-list" v-for="company in companies">
-              <li><a @click="(company_name = company.label + ' - ' + company.name), (share_price = company.share_price), (num_of_shares = company.total_shares), calculateMarketCap(company.share_price, company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{company.label}}</a></li>
+              <div v-if="company_name != company.label + ' - ' + company.name">
+                <li><a @click="(company_name = company.label + ' - ' + company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{company.label}}</a></li>
+              </div>
+              <div v-if="company_name == company.label + ' - ' + company.name">
+                <li><a class="is-active" @click="(company_name = company.label + ' - ' + company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{company.label}} - <b>CLICK TO UPDATE</b></a></li>
+              </div>
             </ul>
           </aside>
         </div>
@@ -147,9 +165,6 @@ export default {
                 <div>
                   <StockChart ref="stockChart"></StockChart>
                 </div>
-                <div>
-                  <SharesChart></SharesChart>
-                </div>
               </div>
               <div class="box movement_options">
                 <div class="buy-sell">
@@ -171,7 +186,7 @@ export default {
                     <button class="button is-link">Submmit</button>
                   </div>
                   <hr>
-                  <StockList></StockList>
+                  <p>NEWS</p>
                 </div>
               </div>
             </div>
@@ -181,6 +196,13 @@ export default {
     </div>
     <div class="wallet" v-if="page == 'wallet'">
 
+    </div>
+    <div class="creation_screen" v-if="page == 'creation'">
+      <div class="creation_screen_box box">
+        <div>
+          <SharesChart></SharesChart>
+        </div>
+      </div>
     </div>
   </main>
 </template>

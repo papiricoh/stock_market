@@ -63,3 +63,10 @@ body {
 .buy-sell>* {
     margin: 10px;
 }
+.creation_screen {
+    padding: 40px;
+}
+.creation_screen_box {
+    height: 40rem;
+    display: flex;
+}
