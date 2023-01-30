@@ -282,6 +282,7 @@ export default {
             <button v-else class="button is-info form_button"
               @click="updateStockPie(slider_position, input_number_of_shares), calculateSells(input_deposit_money, (input_share_price * input_number_of_shares) * 0.65)">Calculate
               Sales</button>
+            <button class="button is-success form_button">Submit Company</button>
           </div>
         </div>
         <div>
