@@ -2,14 +2,14 @@
 export default {
   data() {
     return {
-      series: [623020, 0],
+      series: [100, 0],
       chartOptions: {
         chart: {
           width: 380,
           type: 'donut',
         },
         dataLabels: {
-          enabled: false
+          enabled: true
         },
         labels: ['Owner (You)', 'Freed Shares'],
         responsive: [{
@@ -53,6 +53,12 @@ export default {
 
     reset: function () {
       this.series = [44, 55, 13, 33]
+    },
+    updateStockPie(number, input_number_of_shares) {
+      let stvalue = input_number_of_shares - number;
+      let scndvalue = input_number_of_shares - stvalue;
+      let new_values = [stvalue, scndvalue];
+      this.series = new_values;
     }
   },
 }
