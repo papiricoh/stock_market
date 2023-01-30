@@ -137,3 +137,9 @@ body {
     cursor: pointer;
     /* Cursor on hover */
 }
+
+.form_button {
+    width: 100%;
+    align-items: center;
+    margin-top: 4px;
+}

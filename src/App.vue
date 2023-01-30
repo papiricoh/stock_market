@@ -24,6 +24,7 @@ export default {
       order_type: "ot",
       input_number_of_shares: 1,
       input_share_price: 0,
+      input_deposit_money: 1,
 
 
       //COMPANY FORM
@@ -72,6 +73,12 @@ export default {
         if (this.companies[index].owner == owner_id) {
           this.has_company = index;
         }
+      }
+    },
+    calculateSells(deposit, minimun) {
+      if (deposit >= minimun && minimun > 0) {
+        let percentage = ((deposit - minimun) / minimun) + 0.1;
+        this.$refs.sharesChart.calculateSells(percentage);
       }
     }
   }
@@ -247,7 +254,7 @@ export default {
             <div class="control has-icons-left has-icons-right">
               <input class="input" type="text" placeholder="Label of the company (4 letters MAX)">
               <span class="icon is-left">
-                <font-awesome-icon icon="fas fa-building"></font-awesome-icon>
+                <font-awesome-icon icon="fas fa-tag"></font-awesome-icon>
               </span>
               <span class="icon is-right">
                 <font-awesome-icon v-if="!error_label" icon="fas fa-check"></font-awesome-icon>
@@ -265,11 +272,17 @@ export default {
           <div>
             <p>Requested share price:</p>
             <input v-model="input_share_price" class="input" type="text" placeholder="Number of Shares">
-            <div class=""><b>Market Cap:</b> ${{ input_share_price * input_number_of_shares }}</div>
-            <div class=""><b>Minimun needed money:</b> ${{ (input_share_price * input_number_of_shares) * 0.65 }}
-            </div>
+            <div><b>Market Cap:</b> ${{ input_share_price * input_number_of_shares }}</div>
+            <div><b>Minimun needed money:</b> ${{ (input_share_price * input_number_of_shares) * 0.65 }}</div>
+            <div>Money you want to deposit:</div>
+            <input v-model="input_deposit_money" class="input" type="text" placeholder="Deposit money">
+            <button
+              v-if="(input_deposit_money < (input_share_price * input_number_of_shares) * 0.65) || (0 == (input_share_price * input_number_of_shares) * 0.65)"
+              class="button is-danger form_button">Deposit money below minimun</button>
+            <button v-else class="button is-info form_button"
+              @click="updateStockPie(slider_position, input_number_of_shares), calculateSells(input_deposit_money, (input_share_price * input_number_of_shares) * 0.65)">Calculate
+              Sales</button>
           </div>
-
         </div>
         <div>
           <SharesChart ref="sharesChart"></SharesChart>

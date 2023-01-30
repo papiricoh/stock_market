@@ -2,7 +2,8 @@
 export default {
   data() {
     return {
-      series: [100, 0],
+      saved_data: 0,
+      series: [100, 0, 0],
       chartOptions: {
         chart: {
           width: 380,
@@ -11,7 +12,7 @@ export default {
         dataLabels: {
           enabled: true
         },
-        labels: ['Owner (You)', 'Freed Shares'],
+        labels: ['Owner (You)', 'Freed Shares', 'Estimated Shares to Sell'],
         responsive: [{
           breakpoint: 480,
           options: {
@@ -57,9 +58,24 @@ export default {
     updateStockPie(number, input_number_of_shares) {
       let stvalue = input_number_of_shares - number;
       let scndvalue = input_number_of_shares - stvalue;
+      this.saved_data = stvalue;
       let new_values = [stvalue, scndvalue];
       this.series = new_values;
       this.chartOptions.labels = ['Owner (You)', 'Freed Shares'];
+    },
+    calculateSells(percentage) {
+      if (percentage > 1) {
+        percentage = 1;
+      }
+      let free_shares = this.series[1];
+      let sell_shares = free_shares * percentage;
+      let new_series = [this.saved_data, free_shares - sell_shares, sell_shares];
+      this.updateLabels(['Owner (You)', 'Freed Shares', ' Shares to Sell']);
+      this.series = new_series;
+
+    },
+    updateLabels(list) {
+      this.chartOptions.labels = list;
     }
   },
 }
