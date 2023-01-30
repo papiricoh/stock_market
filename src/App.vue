@@ -262,6 +262,13 @@ export default {
             <input type="range" min="1" :max="input_number_of_shares" class="slider" v-model="slider_position"
               id="sharesRange" @click="updateStockPie(slider_position, input_number_of_shares)">
           </div>
+          <div>
+            <p>Requested share price:</p>
+            <input v-model="input_share_price" class="input" type="text" placeholder="Number of Shares">
+            <div class=""><b>Market Cap:</b> ${{ input_share_price * input_number_of_shares }}</div>
+            <div class=""><b>Minimun needed money:</b> ${{ (input_share_price * input_number_of_shares) * 0.65 }}
+            </div>
+          </div>
 
         </div>
         <div>

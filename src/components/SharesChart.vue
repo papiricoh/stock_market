@@ -59,6 +59,7 @@ export default {
       let scndvalue = input_number_of_shares - stvalue;
       let new_values = [stvalue, scndvalue];
       this.series = new_values;
+      this.chartOptions.labels = ['Owner (You)', 'Freed Shares'];
     }
   },
 }
