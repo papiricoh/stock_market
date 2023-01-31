@@ -35,8 +35,8 @@ export default {
       input_share_price: 0,
       input_deposit_money: 1,
       //Error Variables
-      error_name: false,
-      error_label: false,
+      error_company_form: false,
+      //Company Owner View
 
 
       companies: [
@@ -83,16 +83,25 @@ export default {
         this.$refs.sharesChart.calculateSells(percentage);
       }
     },
-    submitCompany(totalCompanyShares) {
-      //TODO: CHECK DUPLICATES / WRONG DATA
-      let free_shares = this.slider_position; //input_deposit_money,
-      let percentage = (this.input_share_price * this.input_number_of_shares) * 0.65
-      if (percentage > 1) {
-        percentage = 1;
+    checkCompanyForm() {
+      if (this.input_deposit_money > this.money || this.form_company_label.length > 4) {
+        this.error_company_form = true;
+      } else {
+        this.error_company_form = false;
       }
-      let sell_shares = free_shares * percentage;
-      this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: totalCompanyShares, historic: [0, this.input_share_price, this.input_share_price,], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, buyed_shares: Number(sell_shares.toFixed(0)) };
-      console.log(this.companies[this.companies.length - 1])
+    },
+    submitCompany(totalCompanyShares) {
+      this.checkCompanyForm();
+      if (!this.error_company_form) {
+        let free_shares = this.slider_position; //input_deposit_money,
+        let percentage = (this.input_share_price * this.input_number_of_shares) * 0.65
+        if (percentage > 1) {
+          percentage = 1;
+        }
+        let sell_shares = free_shares * percentage;
+        this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: totalCompanyShares, historic: [0, this.input_share_price, this.input_share_price,], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, buyed_shares: Number(sell_shares.toFixed(0)) };
+
+      }
     }
   }
 }
@@ -248,7 +257,10 @@ export default {
 
     </div>
     <div class="creation_screen" v-if="page == 'creation'">
-      <div class="creation_screen_box box">
+      <div v-if="has_company != -1">
+
+      </div>
+      <div v-else class="creation_screen_box box">
         <div class="box comp_creation_form_box">
           <div class="title">Company Creator</div>
           <div class="field">
@@ -258,7 +270,7 @@ export default {
                 <font-awesome-icon icon="fas fa-building"></font-awesome-icon>
               </span>
               <span class="icon is-right">
-                <font-awesome-icon v-if="!error_name" icon="fas fa-check"></font-awesome-icon>
+                <font-awesome-icon v-if="!error_company_form" icon="fas fa-check"></font-awesome-icon>
                 <font-awesome-icon v-else icon="fas fa-circle-xmark"></font-awesome-icon>
               </span>
             </div>
@@ -271,7 +283,7 @@ export default {
                 <font-awesome-icon icon="fas fa-tag"></font-awesome-icon>
               </span>
               <span class="icon is-right">
-                <font-awesome-icon v-if="!error_label" icon="fas fa-check"></font-awesome-icon>
+                <font-awesome-icon v-if="!error_company_form" icon="fas fa-check"></font-awesome-icon>
                 <font-awesome-icon v-else icon="fas fa-circle-xmark"></font-awesome-icon>
               </span>
             </div>
@@ -296,9 +308,11 @@ export default {
             <button v-else class="button is-info form_button"
               @click="updateStockPie(slider_position, input_number_of_shares), calculateSells(input_deposit_money, (input_share_price * input_number_of_shares) * 0.65)">Calculate
               Sales</button>
+            <p class="red" v-if="error_company_form">ERROR IN ONE OR MULTIPLE INPUTS</p>
             <button
               v-if="(input_deposit_money > (input_share_price * input_number_of_shares) * 0.65) && !(0 == (input_share_price * input_number_of_shares) * 0.65)"
-              class="button is-success form_button" @click="submitCompany(input_number_of_shares)">Submit
+              class="button is-success form_button"
+              @click="submitCompany(input_number_of_shares), checkOwnership(user_id)">Submit
               Company</button>
           </div>
         </div>
