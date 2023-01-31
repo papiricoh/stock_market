@@ -23,18 +23,17 @@ export default {
 
       //Market Form
       order_type: "ot",
-      input_number_of_shares: 1,
-      input_share_price: 0,
-      input_deposit_money: 1,
+      market_form_number_of_shares: 1,
+      market_form_share_price: 0,
 
 
       //COMPANY FORM
       form_company_label: "",
       form_company_name: "",
       slider_position: 0,
-      form_total_shares: 100,
-      form_share_price: 100,
-      form_total_value: 10000,
+      input_number_of_shares: 1,
+      input_share_price: 0,
+      input_deposit_money: 1,
       //Error Variables
       error_name: false,
       error_label: false,
@@ -84,9 +83,16 @@ export default {
         this.$refs.sharesChart.calculateSells(percentage);
       }
     },
-    submitCompany() {
+    submitCompany(totalCompanyShares) {
       //TODO: CHECK DUPLICATES / WRONG DATA
-      this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: this.form_total_shares, historic: [this.share_price], owner: this.user_id, avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 }
+      let free_shares = this.slider_position; //input_deposit_money,
+      let percentage = (this.input_share_price * this.input_number_of_shares) * 0.65
+      if (percentage > 1) {
+        percentage = 1;
+      }
+      let sell_shares = free_shares * percentage;
+      this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: totalCompanyShares, historic: [0, this.input_share_price, this.input_share_price,], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, buyed_shares: Number(sell_shares.toFixed(0)) };
+      console.log(this.companies[this.companies.length - 1])
     }
   }
 }
@@ -213,10 +219,10 @@ export default {
                 <div class="buy-sell">
                   <b class="a30-text">Buy/Sell</b>
                   <p>Number of Shares:</p>
-                  <input v-model.number="input_number_of_shares" class="input" type="text"
+                  <input v-model.number="market_form_number_of_shares" class="input" type="text"
                     placeholder="Number of Shares">
                   <p>Share Price:</p>
-                  <input v-model="input_share_price" class="input" type="text" placeholder="Number of Shares">
+                  <input v-model="market_form_share_price" class="input" type="text" placeholder="Number of Shares">
                   <div class="control">
                     <label class="radio">
                       <input type="radio" v-model.number="order_type" value="Buy" checked>
@@ -292,7 +298,8 @@ export default {
               Sales</button>
             <button
               v-if="(input_deposit_money > (input_share_price * input_number_of_shares) * 0.65) && !(0 == (input_share_price * input_number_of_shares) * 0.65)"
-              class="button is-success form_button" @click="submitCompany()">Submit Company</button>
+              class="button is-success form_button" @click="submitCompany(input_number_of_shares)">Submit
+              Company</button>
           </div>
         </div>
         <div>
