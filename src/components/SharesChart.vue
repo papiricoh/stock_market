@@ -70,7 +70,6 @@ export default {
       let free_shares = this.series[1];
       let sell_shares = free_shares * percentage;
       let new_series = [this.saved_data, free_shares - sell_shares.toFixed(0), Number(sell_shares.toFixed(0))];
-      console.log(new_series);
       this.updateLabels(['Owner (You)', 'Freed Shares', ' Shares to Sell']);
       this.series = new_series;
 

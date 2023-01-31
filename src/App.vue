@@ -14,6 +14,7 @@ export default {
       money: 90000,
 
       //Market Variables
+      company_label: null,
       company_name: null,
       share_movement: 1, //0: down 1:neutral 2:up
       share_price: 1200,
@@ -28,6 +29,8 @@ export default {
 
 
       //COMPANY FORM
+      form_company_label: "",
+      form_company_name: "",
       slider_position: 0,
       form_total_shares: 100,
       form_share_price: 100,
@@ -38,10 +41,10 @@ export default {
 
 
       companies: [
-        { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC" },
-        { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC" },
-        { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203], owner: "NPC" },
-        { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC" }
+        { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
+        { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
+        { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
+        { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 }
       ]
     }
   },
@@ -80,6 +83,10 @@ export default {
         let percentage = ((deposit - minimun) / minimun) + 0.1;
         this.$refs.sharesChart.calculateSells(percentage);
       }
+    },
+    submitCompany() {
+      //TODO: CHECK DUPLICATES / WRONG DATA
+      this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: this.form_total_shares, historic: [this.share_price], owner: this.user_id, avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 }
     }
   }
 }
@@ -154,16 +161,16 @@ export default {
               General
             </p>
             <ul class="menu-list" v-for="company in companies">
-              <div v-if="company_name != company.label + ' - ' + company.name">
+              <div v-if="company_label != company.label">
                 <li><a
-                    @click="(company_name = company.label + ' - ' + company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
+                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
                       company.label
                     }}</a>
                 </li>
               </div>
-              <div v-if="company_name == company.label + ' - ' + company.name">
+              <div v-if="company_label == company.label">
                 <li><a class="is-active"
-                    @click="(company_name = company.label + ' - ' + company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
+                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
                       company.label
                     }}
                     - <b>CLICK TO UPDATE</b></a></li>
@@ -173,7 +180,7 @@ export default {
         </div>
         <div class="box markets_graphs">
           <div v-if="company_name != null">
-            <div class="subtitle">{{ company_name }}</div>
+            <div class="subtitle">{{ company_label + " - " + company_name }}</div>
             <div class="company_data_box">
               <div v-if="share_movement == 2" class="company_data_element box">
                 <p>Share Price</p>
@@ -240,7 +247,7 @@ export default {
           <div class="title">Company Creator</div>
           <div class="field">
             <div class="control has-icons-left has-icons-right">
-              <input class="input" type="text" placeholder="Name of the company">
+              <input v-model="form_company_name" class="input" type="text" placeholder="Name of the company">
               <span class="icon is-left">
                 <font-awesome-icon icon="fas fa-building"></font-awesome-icon>
               </span>
@@ -252,7 +259,8 @@ export default {
           </div>
           <div class="field">
             <div class="control has-icons-left has-icons-right">
-              <input class="input" type="text" placeholder="Label of the company (4 letters MAX)">
+              <input v-model="form_company_label" class="input" type="text"
+                placeholder="Label of the company (4 letters MAX)">
               <span class="icon is-left">
                 <font-awesome-icon icon="fas fa-tag"></font-awesome-icon>
               </span>
@@ -282,7 +290,9 @@ export default {
             <button v-else class="button is-info form_button"
               @click="updateStockPie(slider_position, input_number_of_shares), calculateSells(input_deposit_money, (input_share_price * input_number_of_shares) * 0.65)">Calculate
               Sales</button>
-            <button class="button is-success form_button">Submit Company</button>
+            <button
+              v-if="(input_deposit_money > (input_share_price * input_number_of_shares) * 0.65) && !(0 == (input_share_price * input_number_of_shares) * 0.65)"
+              class="button is-success form_button" @click="submitCompany()">Submit Company</button>
           </div>
         </div>
         <div>
