@@ -37,10 +37,12 @@ export default {
       //Error Variables
       error_company_form: false,
       //Company Owner View
+      owned_company: {},
 
 
       companies: [
         { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
+        { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 120000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
         { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
         { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
         { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 }
@@ -52,6 +54,18 @@ export default {
     SharesChart,
   },
   methods: {
+    extractOwningCompany() {
+      if (this.has_company != -1) {
+        for (let index = 0; index < this.companies.length; index++) {
+          if (this.user_id == this.companies[index].owner) {
+            this.owned_company = this.companies[index];
+            let argument_list = [this.companies[index].owner_shares, this.companies[index].avariableShares, this.companies[index].buyed_shares];
+            console.log(argument_list);
+            this.$refs.sharesChart.setSeries(argument_list); //TODO
+          }
+        }
+      }
+    },
     updateChart(data) {
       this.$refs.stockChart.updateChart(data);
     },
@@ -74,6 +88,7 @@ export default {
       for (let index = 0; index < this.companies.length; index++) {
         if (this.companies[index].owner == owner_id) {
           this.has_company = index;
+          this.extractOwningCompany();
         }
       }
     },
@@ -150,13 +165,13 @@ export default {
         <li class="is-active" v-if="page == 'creation'">
           <a>
             <span class="icon"><font-awesome-icon icon="fa-solid fa-building" /></span>
-            <span>Create Your Company</span>
+            <span>Your Company</span>
           </a>
         </li>
         <li v-else @click="page = 'creation', company_name = null, checkOwnership(user_id)">
           <a>
             <span class="icon"><font-awesome-icon icon="fa-solid fa-building" /></span>
-            <span>Create Your Company</span>
+            <span>Your Company</span>
           </a>
         </li>
       </ul>
@@ -257,8 +272,13 @@ export default {
 
     </div>
     <div class="creation_screen" v-if="page == 'creation'">
-      <div v-if="has_company != -1">
-
+      <div v-if="has_company != -1"> <!-- OWN COMPANY SCREEN -->
+        <div class="creation_screen_box">
+          <div class="box">
+            <div class="title">Company Management</div>
+            <SharesChart ref="sharesChart"></SharesChart>
+          </div>
+        </div>
       </div>
       <div v-else class="creation_screen_box box">
         <div class="box comp_creation_form_box">
