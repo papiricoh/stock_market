@@ -55,6 +55,10 @@ export default {
     reset: function () {
       this.series = [44, 55, 13, 33]
     },
+    setSeries(argument_list) {
+      console.log(argument_list);
+      this.series = argument_list;
+    },
     updateStockPie(number, input_number_of_shares) {
       let stvalue = input_number_of_shares - number;
       let scndvalue = input_number_of_shares - stvalue;
