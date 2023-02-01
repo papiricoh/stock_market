@@ -12,7 +12,7 @@ export default {
         dataLabels: {
           enabled: true
         },
-        labels: ['Owner (You)', 'Freed Shares', 'Estimated Shares to Sell'],
+        labels: ['Owner (You)', 'Freed Shares', 'Npc/Sold Shares'],
         responsive: [{
           breakpoint: 480,
           options: {
@@ -56,7 +56,6 @@ export default {
       this.series = [44, 55, 13, 33]
     },
     setSeries(argument_list) {
-      console.log(argument_list);
       this.series = argument_list;
     },
     updateStockPie(number, input_number_of_shares) {

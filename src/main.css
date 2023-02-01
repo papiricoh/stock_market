@@ -74,6 +74,13 @@ body {
 .creation_screen_box {
     height: 40rem;
     display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.center {
+    text-align: center;
     align-items: center;
     justify-content: center;
 }
