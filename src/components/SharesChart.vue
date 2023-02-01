@@ -12,7 +12,7 @@ export default {
         dataLabels: {
           enabled: true
         },
-        labels: ['Owner (You)', 'Freed Shares', 'Npc/Sold Shares'],
+        labels: ['Owner (You)', 'Freed Shares', 'Sold Shares'],
         responsive: [{
           breakpoint: 480,
           options: {

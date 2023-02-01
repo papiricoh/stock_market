@@ -93,6 +93,10 @@ body {
     width: 100%;
 }
 
+.flex {
+    display: flex;
+}
+
 /* The slider itself */
 .slider {
     -webkit-appearance: none;
