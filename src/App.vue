@@ -42,7 +42,7 @@ export default {
       company_manager_slider: 0,
 
       shares: [
-        {label: 'LSEI', cuantity: 2, buyed_at: 12000}
+        {label: 'LSEI', cuantity: 2, bought_at: 12000}
       ],
 
       news: [
@@ -50,11 +50,11 @@ export default {
       ],
 
       companies: [
-        { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
-        { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 120000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 32000, owner_shares: 50000, buyed_shares: 18000 },
-        { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
-        { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 67980, 48520, 20000, 45000, 54100, 56000, 10240, 14570, 21300, 20300, 12030], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
-        { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 }
+        { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
+        { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 120000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 32000, owner_shares: 50000, bought_shares: 18000 },
+        { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
+        { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 67980, 48520, 20000, 45000, 54100, 56000, 10240, 14570, 21300, 20300, 12030], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
+        { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 }
       ]
     }
   },
@@ -68,7 +68,7 @@ export default {
         for (let index = 0; index < this.companies.length; index++) {
           if (this.user_id == this.companies[index].owner) {
             this.owned_company = this.companies[index];
-            this.$refs.companySharesChart.setSeries([this.companies[index].owner_shares, this.companies[index].avariableShares, this.companies[index].buyed_shares]); //TODO
+            this.$refs.companySharesChart.setSeries([this.companies[index].owner_shares, this.companies[index].avariableShares, this.companies[index].bought_shares]); //TODO
           }
         }
       }
@@ -96,7 +96,6 @@ export default {
         }
       }
       //SORT
-      console.log(news_label);
       if(news_label.length >= 4) {
         let news_label_copy = [];
         for (let index = 1; index < 4; index++) {
@@ -135,7 +134,7 @@ export default {
         if(this.companies[index].label == this.owned_company.label) {
           this.owned_company.historic = this.addSharePrice(this.owned_company.historic, Number(this.calculateNewPrice(company_manager_slider, this.owned_company)));
           this.companies[index] = this.owned_company;
-          this.money = Number(Number(this.money) + Number(this.calculateNewPrice(company_manager_slider, this.owned_company) * company_manager_slider)).toFixed(0);
+          this.money = Number(Number(Number(this.money) + Number(this.calculateNewPrice(company_manager_slider, this.owned_company) * company_manager_slider)).toFixed(0));
         }
       }
       this.company_manager_slider = 0;
@@ -176,6 +175,12 @@ export default {
         this.$refs.sharesChart.calculateSells(percentage);
       }
     },
+    calculateSellsReturn(deposit, minimun) {
+      if (deposit >= minimun && minimun > 0) {
+        let percentage = ((deposit - minimun) / minimun) + 0.1;
+        return percentage;
+      }
+    },
     checkCompanyForm() {
       if (this.input_deposit_money > this.money || this.form_company_label.length > 4) {
         this.error_company_form = true;
@@ -183,17 +188,17 @@ export default {
         this.error_company_form = false;
       }
     },
-    submitCompany(totalCompanyShares) {
+    submitCompany(totalCompanyShares, deposit, minimun) {
       this.checkCompanyForm();
       if (!this.error_company_form) {
         let free_shares = this.slider_position; //input_deposit_money,
-        let percentage = (this.input_share_price * this.input_number_of_shares) * 0.65
+        let percentage = this.calculateSellsReturn(deposit, minimun);
+        console.log(percentage)
         if (percentage > 1) {
           percentage = 1;
         }
-        let sell_shares = free_shares * percentage;
-        this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: totalCompanyShares, historic: [0, this.input_share_price, this.input_share_price,], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, buyed_shares: Number(sell_shares.toFixed(0)) };
-
+        let sell_shares = Number(Number(free_shares) * Number(percentage));
+        this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: Number(totalCompanyShares), historic: [0, this.input_share_price, this.input_share_price,], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, bought_shares: Number(sell_shares.toFixed(0)) };
       }
     },
     calculateNewPrice(selling_shares, owned_company) {
@@ -238,7 +243,7 @@ export default {
             <span>Wallet</span>
           </a>
         </li>
-        <li v-else @click="page = 'wallet', company_name = null">
+        <li v-else @click="page = 'wallet', company_name = null, checkOwnership(user_id)">
           <a>
             <span class="icon"><font-awesome-icon icon="fa-solid fa-wallet" /></span>
             <span>Wallet</span>
@@ -368,8 +373,9 @@ export default {
               <div>Wallet Money: <b>${{ money.toLocaleString() }}</b></div>
             </div>
             <div class="wallet_shares">
+              <div v-if="has_company != -1"><b>{{ owned_company.label }}</b> - Owner of the {{ ((owned_company.owner_shares / owned_company.total_shares) * 100).toFixed(2) }}% of the company</div>
               <ul v-for="share in shares">
-                <li>{{ share.label }}</li>
+                <li><b>{{ share.label }}</b> - {{ share.cuantity.toLocaleString() }} shares bought at ${{ share.bought_at.toLocaleString() }}</li>
               </ul>
             </div>
           </div>
@@ -442,15 +448,15 @@ export default {
           <div class="slide_container">
             <p>Total company shares:</p>
             <input v-model="input_number_of_shares" class="input" type="text" placeholder="Number of Shares">
-            <p>Number of Shares to release: {{ slider_position }} Shares</p>
+            <p>Number of Shares to release: {{ Number(slider_position).toLocaleString() }} Shares</p>
             <input type="range" min="1" :max="input_number_of_shares" class="slider" v-model="slider_position"
               id="sharesRange" @click="updateStockPie(slider_position, input_number_of_shares)">
           </div>
           <div>
             <p>Requested share price:</p>
             <input v-model="input_share_price" class="input" type="text" placeholder="Number of Shares">
-            <div><b>Market Cap:</b> ${{ input_share_price * input_number_of_shares }}</div>
-            <div><b>Minimun needed money:</b> ${{ (input_share_price * input_number_of_shares) * 0.65 }}</div>
+            <div><b>Market Cap:</b> ${{ (input_share_price * input_number_of_shares).toLocaleString() }}</div>
+            <div><b>Minimun needed money:</b> ${{ Number((input_share_price * input_number_of_shares) * 0.65).toLocaleString() }}</div>
             <div>Money you want to deposit:</div>
             <input v-model="input_deposit_money" class="input" type="text" placeholder="Deposit money">
             <button
@@ -463,7 +469,7 @@ export default {
             <button
               v-if="(input_deposit_money > (input_share_price * input_number_of_shares) * 0.65) && !(0 == (input_share_price * input_number_of_shares) * 0.65)"
               class="button is-success form_button"
-              @click="submitCompany(input_number_of_shares), checkOwnership(user_id)">Submit
+              @click="submitCompany(input_number_of_shares, input_deposit_money, (input_share_price * input_number_of_shares) * 0.65), checkOwnership(user_id)">Submit
               Company</button>
           </div>
         </div>
