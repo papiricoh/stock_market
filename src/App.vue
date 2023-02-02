@@ -293,27 +293,27 @@ export default {
             <div class="company_data_box">
               <div v-if="share_movement == 2" class="company_data_element box">
                 <p>Share Price</p>
-                <b class="green"><font-awesome-icon icon="fa-solid fa-arrow-up" /> ${{ share_price }}</b>
+                <b class="green"><font-awesome-icon icon="fa-solid fa-arrow-up" /> ${{ share_price.toLocaleString() }}</b>
               </div>
               <div v-if="share_movement == 1" class="company_data_element box">
                 <p>Share Price</p>
-                <b class="orange"><font-awesome-icon icon="fa-solid fa-minus" /> ${{ share_price }}</b>
+                <b class="orange"><font-awesome-icon icon="fa-solid fa-minus" /> ${{ share_price.toLocaleString() }}</b>
               </div>
               <div v-if="share_movement == 0" class="company_data_element box">
                 <p>Share Price</p>
-                <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> ${{ share_price }}</b>
+                <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> ${{ share_price.toLocaleString() }}</b>
               </div>
               <div class="company_data_element box">
                 <p>Avariable Shares</p>
-                <b>{{ avariable_shares }}</b>
+                <b>{{ avariable_shares.toLocaleString() }}</b>
               </div>
               <div class="company_data_element box">
                 <p>Total Shares</p>
-                <b>{{ num_of_shares }}</b>
+                <b>{{ num_of_shares.toLocaleString() }}</b>
               </div>
               <div class="company_data_element box">
                 <p>Market Cap</p>
-                <b>${{ market_cap }}</b>
+                <b>${{ market_cap.toLocaleString() }}</b>
               </div>
             </div>
             <div class="company_data_box">
