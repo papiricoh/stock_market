@@ -41,13 +41,17 @@ export default {
       owned_company: {},
       company_manager_slider: 0,
 
+      shares: [
+        {label: 'LSEI', cuantity: 2, buyed_at: 12000}
+      ],
+
       news: [
         { label: 'LSEI', title: 'Los Santos Mayor aproaches the market with solidarity' }
       ],
 
       companies: [
         { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
-        { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 120000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 9000, owner_shares: 30000, buyed_shares: 42000 },
+        { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 120000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 32000, owner_shares: 50000, buyed_shares: 18000 },
         { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
         { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 67980, 48520, 20000, 45000, 54100, 56000, 10240, 14570, 21300, 20300, 12030], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
         { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 }
@@ -279,7 +283,7 @@ export default {
               </div>
               <div v-if="company_label == company.label">
                 <li><a class="is-active"
-                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
+                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
                       company.label
                     }}
                     - <b>CLICK TO UPDATE</b></a></li>
@@ -341,7 +345,7 @@ export default {
                     <button class="button is-link">Submmit</button>
                   </div>
                   <hr>
-                  <div class="newstitle">
+                  <div class="newtitle">
                     <p>NEWS</p>
                   </div>
                   <ul v-for="a_new in news">
@@ -355,7 +359,23 @@ export default {
       </div>
     </div>
     <div class="wallet" v-if="page == 'wallet'">
-
+      <div class="creation_screen_box">
+        <div class="box">
+          <div class="title">Your Wallet</div>
+          <div class="subtitle">Wellcome: {{ full_user_name }}</div>
+          <hr>
+          <div class="wallet_flex">
+            <div class="wallet_balance">
+              <div>Wallet Money: <b>${{ money.toLocaleString() }}</b></div>
+            </div>
+            <div class="wallet_shares">
+              <ul v-for="share in shares">
+                <li></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="creation_screen" v-if="page == 'creation'">
       <div v-if="has_company != -1"> <!-- OWN COMPANY SCREEN -->
@@ -371,16 +391,16 @@ export default {
               <div>
                 <div class="subtitle">{{owned_company.label + " - " + owned_company.name}}</div>
                 <hr>
-                <div>Actual share price: <b>${{ owned_company.historic[owned_company.historic.length - 1] }}</b></div>
-                <div>Owned shares: <b>{{ owned_company.owner_shares }}</b></div>
-                <div>Owned shares total value: <b>${{ Number(owned_company.owner_shares * owned_company.historic[owned_company.historic.length - 1]) }}</b></div>
+                <div>Actual share price: <b>${{ owned_company.historic[owned_company.historic.length - 1].toLocaleString() }}</b></div>
+                <div>Owned shares: <b>{{ owned_company.owner_shares.toLocaleString() }}</b></div>
+                <div>Owned shares total value: <b>${{ Number(owned_company.owner_shares * owned_company.historic[owned_company.historic.length - 1]).toLocaleString() }}</b></div>
                 <br>
               </div>
               <div>
                 <hr>
                 <div class="a20-text">Sell shares</div>
-                <div>Sell: {{ company_manager_slider }} shares leaving {{ owned_company.owner_shares - company_manager_slider }} in your posesion</div>
-                <div>You will get: ${{ (company_manager_slider * calculateNewPrice(company_manager_slider, owned_company)).toFixed(2) }} Diving down the price to: ${{ calculateNewPrice(company_manager_slider, owned_company) }} per share</div>
+                <div>Sell: {{ Number(company_manager_slider).toLocaleString() }} shares leaving {{ (owned_company.owner_shares - company_manager_slider).toLocaleString() }} in your posesion</div>
+                <div>You will get: ${{ Number(Number(Number(company_manager_slider) * Number(calculateNewPrice(company_manager_slider, owned_company))).toFixed(2)).toLocaleString() }} Diving down the price to: ${{ Number(calculateNewPrice(company_manager_slider, owned_company)).toLocaleString() }} per share</div>
                 <input type="range" min="0" :max="owned_company.owner_shares" class="slider" v-model="company_manager_slider" @click="">
                 <div class="red" v-if="owned_company.owner_shares == company_manager_slider">YOU ARE GOING TO SELL ALL OF YOUR SHARES, ARE YOU SURE?</div>
                 <button v-if="company_manager_slider != 0 && (owned_company.owner_shares - company_manager_slider) > -1" class="button is-success form_button" @click="addSellingNew(owned_company, full_user_name, company_manager_slider), companyManagerSellShares(company_manager_slider)">Sell Shares</button>
