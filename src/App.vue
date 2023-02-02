@@ -38,6 +38,7 @@ export default {
       error_company_form: false,
       //Company Owner View
       owned_company: {},
+      company_manager_slider: 0,
 
 
       companies: [
@@ -279,8 +280,25 @@ export default {
               <hr>
               <SharesChart ref="companySharesChart"></SharesChart>
             </div>
-            <div>
-              <p>OWNER PATRIMONY, ALL TIME HIGH AND SELL SHARES SCREEN</p>
+            <div class="patrimony_view">
+              <div>
+                <div class="subtitle">{{owned_company.label + " - " + owned_company.name}}</div>
+                <hr>
+                <div>Actual share price: <b>${{ owned_company.historic[owned_company.historic.length - 1] }}</b></div>
+                <div>Owned shares: <b>{{ owned_company.owner_shares }}</b></div>
+                <div>Owned shares total value: <b>${{ Number(owned_company.owner_shares * owned_company.historic[owned_company.historic.length - 1]) }}</b></div>
+                <br>
+              </div>
+              <div>
+                <hr>
+                <div class="a20-text">Sell shares</div>
+                <div>Sell: {{ company_manager_slider }} shares leaving {{ owned_company.owner_shares - company_manager_slider }} in your posesion</div>
+                <input type="range" min="0" :max="owned_company.owner_shares" class="slider" v-model="company_manager_slider" @click="">
+                <div class="red" v-if="owned_company.owner_shares == company_manager_slider">YOU ARE GOING TO SELL ALL OF YOUR SHARES, ARE YOU SURE?</div>
+                <button v-if="company_manager_slider != 0" class="button is-success form_button" @click="">Sell Shares</button>
+                <button v-else class="button is-danger form_button" @click="">No Share amount selected</button>
+                <hr>
+              </div>
             </div>
           </div>
         </div>
