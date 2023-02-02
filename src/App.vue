@@ -80,7 +80,6 @@ export default {
       }
       if(owned_company.owner_shares <= company_manager_slider) {
         this.addNews({label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled all his remaining shares')});
-
       }else {
         this.addNews({label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled ' + company_manager_slider + ' shares')});
       }
