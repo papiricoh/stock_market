@@ -370,7 +370,7 @@ export default {
             </div>
             <div class="wallet_shares">
               <ul v-for="share in shares">
-                <li></li>
+                <li>{{ share.label }}</li>
               </ul>
             </div>
           </div>
