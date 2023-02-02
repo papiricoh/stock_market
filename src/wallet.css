@@ -1,0 +1,11 @@
+.wallet_flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.wallet_balance {
+    min-width: 20rem;
+}
+.wallet_shares {
+    min-width: 20rem;
+}
