@@ -69,6 +69,41 @@ export default {
         }
       }
     },
+    addSellingNew(owned_company, full_user_name, company_manager_slider) {
+      let is_owner = ' the holder of ';
+      if(owned_company.owner == this.user_id) {
+        is_owner = ' the Owner of ';
+      }
+      if(owned_company.owner_shares <= company_manager_slider) {
+        this.addNews({label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled all his remaining shares')});
+
+      }else {
+        this.addNews({label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled ' + company_manager_slider + ' shares')});
+      }
+
+    },
+    addNews(new_new) {
+      let news_no_label = [];
+      let news_label = [];
+      for (let index = 0; index < this.news.length; index++) {
+        if(this.news[index].label == new_new.label) {
+          news_label[news_label.length] = this.news[index];
+        }else {
+          news_no_label[news_label.length] = this.news[index];
+        }
+      }
+      //SORT
+      if(news_label > 4) {
+        for (let index = 1; index < news_label.length; index++) {
+          news_label[index - 1] = news_label[index];
+        }
+        news_label[news_label.length - 1] = new_new;
+      }else {
+        news_label[news_label.length] = new_new;
+      }
+      //FUSE TWO LISTS
+      this.news = news_no_label.concat(news_label);
+    },
     addSharePrice(historic, new_price) {
       if(historic.length + 1 > 31) {
         let new_historic = [];
@@ -343,7 +378,7 @@ export default {
                 <div>You will get: ${{ (company_manager_slider * calculateNewPrice(company_manager_slider, owned_company)).toFixed(2) }} Diving down the price to: ${{ calculateNewPrice(company_manager_slider, owned_company) }} per share</div>
                 <input type="range" min="0" :max="owned_company.owner_shares" class="slider" v-model="company_manager_slider" @click="">
                 <div class="red" v-if="owned_company.owner_shares == company_manager_slider">YOU ARE GOING TO SELL ALL OF YOUR SHARES, ARE YOU SURE?</div>
-                <button v-if="company_manager_slider != 0 && (owned_company.owner_shares - company_manager_slider) > -1" class="button is-success form_button" @click="companyManagerSellShares(company_manager_slider)">Sell Shares</button>
+                <button v-if="company_manager_slider != 0 && (owned_company.owner_shares - company_manager_slider) > -1" class="button is-success form_button" @click="addSellingNew(owned_company, full_user_name, company_manager_slider), companyManagerSellShares(company_manager_slider)">Sell Shares</button>
                 <button v-else-if="company_manager_slider == 0" class="button is-danger form_button" @click="">No Share amount selected</button>
                 <button v-else class="button is-danger form_button" @click="">Share amount Invalid</button>
                 <hr>
