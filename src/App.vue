@@ -345,7 +345,9 @@ export default {
                     <button class="button is-link">Submmit</button>
                   </div>
                   <hr>
-                  <p>NEWS</p>
+                  <div class="newtitle">
+                    <p>NEWS</p>
+                  </div>
                   <ul v-for="a_new in news">
                     <li class="news" v-if="a_new.label == company_label">{{ a_new.title }}</li>
                   </ul>
