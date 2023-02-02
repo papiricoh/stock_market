@@ -76,7 +76,7 @@ body {
 
 .patrimony_view {
     margin-left: 12px;
-    width: 30rem;
+    width: 32rem;
 }
 
 .creation_screen_box {
@@ -85,6 +85,15 @@ body {
     text-align: center;
     align-items: center;
     justify-content: center;
+}
+
+.news {
+    background-color: rgb(248, 202, 149);
+    border: 1px solid;
+    border-radius: 2rem;
+    padding: 5%;
+    font-size: large;
+    margin: 4px;
 }
 
 .center {

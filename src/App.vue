@@ -18,6 +18,7 @@ export default {
       company_name: null,
       share_movement: 1, //0: down 1:neutral 2:up
       share_price: 1200,
+      avariable_shares: 10000,
       num_of_shares: 100000,
       market_cap: 120000000,
 
@@ -40,6 +41,9 @@ export default {
       owned_company: {},
       company_manager_slider: 0,
 
+      news: [
+        { label: 'LSEI', title: 'Los Santos Mayor aproaches the market with solidarity' }
+      ],
 
       companies: [
         { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, buyed_shares: 12000 },
@@ -63,6 +67,40 @@ export default {
             this.$refs.companySharesChart.setSeries([this.companies[index].owner_shares, this.companies[index].avariableShares, this.companies[index].buyed_shares]); //TODO
           }
         }
+      }
+    },
+    addSharePrice(historic, new_price) {
+      if(historic.length + 1 > 31) {
+        let new_historic = [];
+        for (let index = 1; index < historic.length; index++) {
+          new_historic[index - 1] = historic[index];
+        }
+        new_historic[new_historic.length] = new_price;
+        historic = new_historic;
+      }else {
+        historic[historic.length] = new_price;
+      }
+      return historic;
+    },
+    companyManagerSellShares(company_manager_slider) {
+      let selling_all = false;
+      this.owned_company.owner_shares = Number(this.owned_company.owner_shares - company_manager_slider);
+      this.owned_company.avariableShares = Number(Number(this.owned_company.avariableShares) + Number(company_manager_slider));
+      if(this.owned_company.owner_shares < 1) {
+        selling_all = true;
+        this.owned_company.owner = "NPC";
+      }
+      for (let index = 0; index < this.companies.length; index++) {
+        if(this.companies[index].label == this.owned_company.label) {
+          this.owned_company.historic = this.addSharePrice(this.owned_company.historic, Number(this.calculateNewPrice(company_manager_slider, this.owned_company)));
+          this.companies[index] = this.owned_company;
+          this.money = Number(Number(this.money) + Number(this.calculateNewPrice(company_manager_slider, this.owned_company) * company_manager_slider)).toFixed(0);
+        }
+      }
+      this.company_manager_slider = 0;
+      if(selling_all) {
+        this.owned_company = {};
+        this.has_company = -1;
       }
     },
     updateChart(data) {
@@ -116,6 +154,10 @@ export default {
         this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: totalCompanyShares, historic: [0, this.input_share_price, this.input_share_price,], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, buyed_shares: Number(sell_shares.toFixed(0)) };
 
       }
+    },
+    calculateNewPrice(selling_shares, owned_company) {
+      let percentage = selling_shares / owned_company.total_shares;
+      return (owned_company.historic[owned_company.historic.length - 1] - (owned_company.historic[owned_company.historic.length - 1] * percentage)).toFixed(2);
     }
   }
 }
@@ -192,7 +234,7 @@ export default {
             <ul class="menu-list" v-for="company in companies">
               <div v-if="company_label != company.label">
                 <li><a
-                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
+                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
                       company.label
                     }}</a>
                 </li>
@@ -224,6 +266,10 @@ export default {
                 <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> ${{ share_price }}</b>
               </div>
               <div class="company_data_element box">
+                <p>Avariable Shares</p>
+                <b>{{ avariable_shares }}</b>
+              </div>
+              <div class="company_data_element box">
                 <p>Total Shares</p>
                 <b>{{ num_of_shares }}</b>
               </div>
@@ -244,8 +290,6 @@ export default {
                   <p>Number of Shares:</p>
                   <input v-model.number="market_form_number_of_shares" class="input" type="text"
                     placeholder="Number of Shares">
-                  <p>Share Price:</p>
-                  <input v-model="market_form_share_price" class="input" type="text" placeholder="Number of Shares">
                   <div class="control">
                     <label class="radio">
                       <input type="radio" v-model.number="order_type" value="Buy" checked>
@@ -260,6 +304,9 @@ export default {
                   </div>
                   <hr>
                   <p>NEWS</p>
+                  <ul v-for="a_new in news">
+                    <li class="news" v-if="a_new.label == company_label">{{ a_new.title }}</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -293,10 +340,12 @@ export default {
                 <hr>
                 <div class="a20-text">Sell shares</div>
                 <div>Sell: {{ company_manager_slider }} shares leaving {{ owned_company.owner_shares - company_manager_slider }} in your posesion</div>
+                <div>You will get: ${{ (company_manager_slider * calculateNewPrice(company_manager_slider, owned_company)).toFixed(2) }} Diving down the price to: ${{ calculateNewPrice(company_manager_slider, owned_company) }} per share</div>
                 <input type="range" min="0" :max="owned_company.owner_shares" class="slider" v-model="company_manager_slider" @click="">
                 <div class="red" v-if="owned_company.owner_shares == company_manager_slider">YOU ARE GOING TO SELL ALL OF YOUR SHARES, ARE YOU SURE?</div>
-                <button v-if="company_manager_slider != 0" class="button is-success form_button" @click="">Sell Shares</button>
-                <button v-else class="button is-danger form_button" @click="">No Share amount selected</button>
+                <button v-if="company_manager_slider != 0 && (owned_company.owner_shares - company_manager_slider) > -1" class="button is-success form_button" @click="companyManagerSellShares(company_manager_slider)">Sell Shares</button>
+                <button v-else-if="company_manager_slider == 0" class="button is-danger form_button" @click="">No Share amount selected</button>
+                <button v-else class="button is-danger form_button" @click="">Share amount Invalid</button>
                 <hr>
               </div>
             </div>
