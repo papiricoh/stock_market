@@ -85,7 +85,7 @@ export default {
     addNews(new_new) {
       let news_no_label = [];
       let news_label = [];
-      for (let index = 0; index < this.news.length; index++) {
+      for (let index = 0; index < 4; index++) {
         if(this.news[index].label == new_new.label) {
           news_label[news_label.length] = this.news[index];
         }else {
