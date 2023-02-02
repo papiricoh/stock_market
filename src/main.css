@@ -62,21 +62,41 @@ body {
     color: #fff;
 }
 .button.is-link {
+    margin-top: 1rem;
     background-color: rgb(67, 149, 255);
     border-color: transparent;
     color: #fff;
 }
 .button.is-link:hover {
     background-color: rgba(67, 149, 255, 0.801);
+}
+.button.is-info {
+    background-color: rgb(67, 149, 255);
     border-color: transparent;
     color: #fff;
 }
-.checkbox, .radio {
-    cursor: pointer;
-    display: inline-block;
-    line-height: 1.25;
-    position: relative;
+.button.is-info:hover {
+    background-color: rgba(67, 149, 255, 0.801);
 }
+.button.is-danger {
+    transition:500ms;
+    background-color: #4e4e4e77;
+    border-color: transparent;
+    color: #fff;
+}
+.button.is-success {
+    background-color: #48c78e;
+    border-color: transparent;
+    color: #fff;
+    transition:400ms;
+}
+.button.is-success:hover {
+    transition: 200ms;
+    background-color: #000000;
+    border-color: transparent;
+    color: #fff;
+}
+
 .graph_box {
     padding: 3rem;
     display: flex;
@@ -96,7 +116,17 @@ body {
 .buy-sell>* {
     margin: 10px;
 }
-
+.title{
+    margin-top: 2rem;
+    text-transform: uppercase;
+    font-weight: bolder;
+}
+.newstitle{
+    font-weight: 500;
+    padding-bottom: 1rem;
+    border-bottom: solid rgba(67, 149, 255, 0.452);
+    border-radius: 1rem;
+}
 .creation_screen {
     padding: 40px;
 }
@@ -129,7 +159,7 @@ body {
     font-size: large;
     margin: 4px;
     margin-top: 1.5rem;
-    box-shadow: 5px 5px 0px 0px rgba(1, 102, 197, 0.384);
+    box-shadow: 0px 0px 10px 7px rgba(1, 102, 197, 0.178);
 }
 
 .center {
@@ -152,6 +182,7 @@ body {
 
 /* The slider itself */
 .slider {
+    margin-top: 2rem;
     -webkit-appearance: none;
     /* Override default CSS styles */
     appearance: none;
@@ -185,7 +216,7 @@ body {
     /* Set a specific slider handle width */
     height: 25px;
     /* Slider handle height */
-    background: #0f04aa;
+    background: rgb(35, 130, 255);
     /* Green background */
     cursor: pointer;
     /* Cursor on hover */
