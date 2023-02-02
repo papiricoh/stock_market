@@ -85,7 +85,7 @@ export default {
     addNews(new_new) {
       let news_no_label = [];
       let news_label = [];
-      for (let index = 0; index < 4; index++) {
+      for (let index = 0; index < this.news.length; index++) {
         if(this.news[index].label == new_new.label) {
           news_label[news_label.length] = this.news[index];
         }else {
@@ -93,11 +93,14 @@ export default {
         }
       }
       //SORT
-      if(news_label > 4) {
-        for (let index = 1; index < news_label.length; index++) {
-          news_label[index - 1] = news_label[index];
+      console.log(news_label);
+      if(news_label.length >= 4) {
+        let news_label_copy = [];
+        for (let index = 1; index < 4; index++) {
+          news_label_copy[index - 1] = news_label[index];
         }
-        news_label[news_label.length - 1] = new_new;
+        news_label_copy[news_label_copy.length] = new_new;
+        news_label = news_label_copy;
       }else {
         news_label[news_label.length] = new_new;
       }
