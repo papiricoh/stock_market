@@ -1,6 +1,7 @@
 <script setup>
 import StockChart from './components/StockChart.vue'
 import SharesChart from './components/SharesChart.vue'
+import CompanySharesChart from './components/CompanySharesChart.vue'
 </script>
 
 <script>
@@ -21,6 +22,8 @@ export default {
       avariable_shares: 10000,
       num_of_shares: 100000,
       market_cap: 120000000,
+      company_historic: [],
+      company_shares: [],
 
       //Market Form
       order_type: "ot",
@@ -42,7 +45,7 @@ export default {
       company_manager_slider: 0,
 
       shares: [
-        {label: 'LSEI', cuantity: 2, bought_at: 12000}
+        { label: 'LSEI', cuantity: 2, bought_at: 12000 }
       ],
 
       news: [
@@ -75,13 +78,13 @@ export default {
     },
     addSellingNew(owned_company, full_user_name, company_manager_slider) {
       let is_owner = ' the holder of ';
-      if(owned_company.owner == this.user_id) {
+      if (owned_company.owner == this.user_id) {
         is_owner = ' the Owner of ';
       }
-      if(owned_company.owner_shares <= company_manager_slider) {
-        this.addNews({label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled all his remaining shares')});
-      }else {
-        this.addNews({label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled ' + company_manager_slider + ' shares')});
+      if (owned_company.owner_shares <= company_manager_slider) {
+        this.addNews({ label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled all his remaining shares') });
+      } else {
+        this.addNews({ label: owned_company.label, title: (full_user_name + is_owner + owned_company.name + ' has selled ' + company_manager_slider + ' shares') });
       }
 
     },
@@ -89,35 +92,35 @@ export default {
       let news_no_label = [];
       let news_label = [];
       for (let index = 0; index < this.news.length; index++) {
-        if(this.news[index].label == new_new.label) {
+        if (this.news[index].label == new_new.label) {
           news_label[news_label.length] = this.news[index];
-        }else {
+        } else {
           news_no_label[news_label.length] = this.news[index];
         }
       }
       //SORT
-      if(news_label.length >= 4) {
+      if (news_label.length >= 4) {
         let news_label_copy = [];
         for (let index = 1; index < 4; index++) {
           news_label_copy[index - 1] = news_label[index];
         }
         news_label_copy[news_label_copy.length] = new_new;
         news_label = news_label_copy;
-      }else {
+      } else {
         news_label[news_label.length] = new_new;
       }
       //FUSE TWO LISTS
       this.news = news_no_label.concat(news_label);
     },
     addSharePrice(historic, new_price) {
-      if(historic.length + 1 > 31) {
+      if (historic.length + 1 > 31) {
         let new_historic = [];
         for (let index = 1; index < historic.length; index++) {
           new_historic[index - 1] = historic[index];
         }
         new_historic[new_historic.length] = new_price;
         historic = new_historic;
-      }else {
+      } else {
         historic[historic.length] = new_price;
       }
       return historic;
@@ -126,25 +129,22 @@ export default {
       let selling_all = false;
       this.owned_company.owner_shares = Number(this.owned_company.owner_shares - company_manager_slider);
       this.owned_company.avariableShares = Number(Number(this.owned_company.avariableShares) + Number(company_manager_slider));
-      if(this.owned_company.owner_shares < 1) {
+      if (this.owned_company.owner_shares < 1) {
         selling_all = true;
         this.owned_company.owner = "NPC";
       }
       for (let index = 0; index < this.companies.length; index++) {
-        if(this.companies[index].label == this.owned_company.label) {
+        if (this.companies[index].label == this.owned_company.label) {
           this.owned_company.historic = this.addSharePrice(this.owned_company.historic, Number(this.calculateNewPrice(company_manager_slider, this.owned_company)));
           this.companies[index] = this.owned_company;
           this.money = Number(Number(Number(this.money) + Number(this.calculateNewPrice(company_manager_slider, this.owned_company) * company_manager_slider)).toFixed(0));
         }
       }
       this.company_manager_slider = 0;
-      if(selling_all) {
+      if (selling_all) {
         this.owned_company = {};
         this.has_company = -1;
       }
-    },
-    updateChart(data) {
-      this.$refs.stockChart.updateChart(data);
     },
     updateStockPie(slider_position, input_number_of_shares) {
       this.$refs.sharesChart.updateStockPie(slider_position, input_number_of_shares);
@@ -280,14 +280,14 @@ export default {
             <ul class="menu-list" v-for="company in companies">
               <div v-if="company_label != company.label">
                 <li><a
-                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
+                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), company_historic = company.historic, company_shares = [company.owner_shares, company.avariableShares, company.bought_shares]">{{
                       company.label
                     }}</a>
                 </li>
               </div>
               <div v-if="company_label == company.label">
                 <li><a class="is-active"
-                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), updateChart(company.historic)">{{
+                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), company_historic = company.historic">{{
                       company.label
                     }}
                     - <b>CLICK TO UPDATE</b></a></li>
@@ -301,7 +301,9 @@ export default {
             <div class="company_data_box">
               <div v-if="share_movement == 2" class="company_data_element box">
                 <p>Share Price</p>
-                <b class="green"><font-awesome-icon icon="fa-solid fa-arrow-up" /> ${{ share_price.toLocaleString() }}</b>
+                <b class="green"><font-awesome-icon icon="fa-solid fa-arrow-up" /> ${{
+                  share_price.toLocaleString()
+                }}</b>
               </div>
               <div v-if="share_movement == 1" class="company_data_element box">
                 <p>Share Price</p>
@@ -309,7 +311,9 @@ export default {
               </div>
               <div v-if="share_movement == 0" class="company_data_element box">
                 <p>Share Price</p>
-                <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> ${{ share_price.toLocaleString() }}</b>
+                <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> ${{
+                  share_price.toLocaleString()
+                }}</b>
               </div>
               <div class="company_data_element box">
                 <p>Avariable Shares</p>
@@ -327,7 +331,10 @@ export default {
             <div class="company_data_box">
               <div class="graph_box">
                 <div>
-                  <StockChart ref="stockChart"></StockChart>
+                  <StockChart :series="[{ name: company_name + ' Shock', data: company_historic }]"></StockChart>
+                </div>
+                <div>
+                  <CompanySharesChart :series="company_shares"></CompanySharesChart>
                 </div>
               </div>
               <div class="box movement_options">
@@ -373,9 +380,12 @@ export default {
               <div>Wallet Money: <b>${{ money.toLocaleString() }}</b></div>
             </div>
             <div class="wallet_shares">
-              <div v-if="has_company != -1"><b>{{ owned_company.label }}</b> - Owner of the {{ ((owned_company.owner_shares / owned_company.total_shares) * 100).toFixed(2) }}% of the company</div>
+              <div v-if="has_company != -1"><b>{{ owned_company.label }}</b> - Owner of the {{
+              ((owned_company.owner_shares / owned_company.total_shares) * 100).toFixed(2) }}% of the company</div>
               <ul v-for="share in shares">
-                <li><b>{{ share.label }}</b> - {{ share.cuantity.toLocaleString() }} shares bought at ${{ share.bought_at.toLocaleString() }}</li>
+                <li><b>{{ share.label }}</b> - {{ share.cuantity.toLocaleString() }} shares bought at ${{
+                  share.bought_at.toLocaleString()
+                }}</li>
               </ul>
             </div>
           </div>
@@ -394,22 +404,38 @@ export default {
             </div>
             <div class="patrimony_view">
               <div>
-                <div class="subtitle">{{owned_company.label + " - " + owned_company.name}}</div>
+                <div class="subtitle">{{ owned_company.label + " - " + owned_company.name }}</div>
                 <hr>
-                <div>Actual share price: <b>${{ owned_company.historic[owned_company.historic.length - 1].toLocaleString() }}</b></div>
+                <div>Actual share price: <b>${{
+                  owned_company.historic[owned_company.historic.length -
+                    1].toLocaleString()
+                }}</b></div>
                 <div>Owned shares: <b>{{ owned_company.owner_shares.toLocaleString() }}</b></div>
-                <div>Owned shares total value: <b>${{ Number(owned_company.owner_shares * owned_company.historic[owned_company.historic.length - 1]).toLocaleString() }}</b></div>
+                <div>Owned shares total value: <b>${{
+                  Number(owned_company.owner_shares *
+                    owned_company.historic[owned_company.historic.length - 1]).toLocaleString()
+                }}</b></div>
                 <br>
               </div>
               <div>
                 <hr>
                 <div class="a20-text">Sell shares</div>
-                <div>Sell: {{ Number(company_manager_slider).toLocaleString() }} shares leaving {{ (owned_company.owner_shares - company_manager_slider).toLocaleString() }} in your posesion</div>
-                <div>You will get: ${{ Number(Number(Number(company_manager_slider) * Number(calculateNewPrice(company_manager_slider, owned_company))).toFixed(2)).toLocaleString() }} Diving down the price to: ${{ Number(calculateNewPrice(company_manager_slider, owned_company)).toLocaleString() }} per share</div>
-                <input type="range" min="0" :max="owned_company.owner_shares" class="slider" v-model="company_manager_slider" @click="">
-                <div class="red" v-if="owned_company.owner_shares == company_manager_slider">YOU ARE GOING TO SELL ALL OF YOUR SHARES, ARE YOU SURE?</div>
-                <button v-if="company_manager_slider != 0 && (owned_company.owner_shares - company_manager_slider) > -1" class="button is-success form_button" @click="addSellingNew(owned_company, full_user_name, company_manager_slider), companyManagerSellShares(company_manager_slider)">Sell Shares</button>
-                <button v-else-if="company_manager_slider == 0" class="button is-danger form_button" @click="">No Share amount selected</button>
+                <div>Sell: {{ Number(company_manager_slider).toLocaleString() }} shares leaving {{
+                (owned_company.owner_shares - company_manager_slider).toLocaleString() }} in your posesion</div>
+                <div>You will get: ${{ Number(Number(Number(company_manager_slider) *
+                Number(calculateNewPrice(company_manager_slider, owned_company))).toFixed(2)).toLocaleString() }}
+                  Diving down the price to: ${{ Number(calculateNewPrice(company_manager_slider,
+                  owned_company)).toLocaleString() }} per share</div>
+                <input type="range" min="0" :max="owned_company.owner_shares" class="slider"
+                  v-model="company_manager_slider" @click="">
+                <div class="red" v-if="owned_company.owner_shares == company_manager_slider">YOU ARE GOING TO SELL ALL
+                  OF YOUR SHARES, ARE YOU SURE?</div>
+                <button v-if="company_manager_slider != 0 && (owned_company.owner_shares - company_manager_slider) > -1"
+                  class="button is-success form_button"
+                  @click="addSellingNew(owned_company, full_user_name, company_manager_slider), companyManagerSellShares(company_manager_slider)">Sell
+                  Shares</button>
+                <button v-else-if="company_manager_slider == 0" class="button is-danger form_button" @click="">No Share
+                  amount selected</button>
                 <button v-else class="button is-danger form_button" @click="">Share amount Invalid</button>
                 <hr>
               </div>
@@ -456,7 +482,8 @@ export default {
             <p>Requested share price:</p>
             <input v-model="input_share_price" class="input" type="text" placeholder="Number of Shares">
             <div><b>Market Cap:</b> ${{ (input_share_price * input_number_of_shares).toLocaleString() }}</div>
-            <div><b>Minimun needed money:</b> ${{ Number((input_share_price * input_number_of_shares) * 0.65).toLocaleString() }}</div>
+            <div><b>Minimun needed money:</b> ${{ Number((input_share_price * input_number_of_shares) *
+            0.65).toLocaleString() }}</div>
             <div>Money you want to deposit:</div>
             <input v-model="input_deposit_money" class="input" type="text" placeholder="Deposit money">
             <button
@@ -478,6 +505,7 @@ export default {
         </div>
       </div>
     </div>
+
   </main>
 </template>
 
