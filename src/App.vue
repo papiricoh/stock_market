@@ -289,8 +289,7 @@ export default {
                 <li><a class="is-active"
                     @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), company_historic = company.historic">{{
                       company.label
-                    }}
-                    - <b>CLICK TO UPDATE</b></a></li>
+                    }}</a></li>
               </div>
             </ul>
           </aside>
