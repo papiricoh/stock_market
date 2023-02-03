@@ -88,6 +88,10 @@ export default {
       }
 
     },
+    getPercentage(company_historic) {
+      let true_percentage = (company_historic[company_historic.length - 1] - company_historic[company_historic.length - 2]) / company_historic[company_historic.length - 2] * 100;
+      return true_percentage.toFixed(2);
+    },
     addNews(new_new) {
       let news_no_label = [];
       let news_label = [];
@@ -193,12 +197,14 @@ export default {
       if (!this.error_company_form) {
         let free_shares = this.slider_position; //input_deposit_money,
         let percentage = this.calculateSellsReturn(deposit, minimun);
-        console.log(percentage)
+        this.money = this.money - deposit;
         if (percentage > 1) {
           percentage = 1;
         }
         let sell_shares = Number(Number(free_shares) * Number(percentage));
-        this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: Number(totalCompanyShares), historic: [0, this.input_share_price, this.input_share_price,], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, bought_shares: Number(sell_shares.toFixed(0)) };
+        this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: Number(totalCompanyShares), historic: [1, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, bought_shares: Number(sell_shares.toFixed(0)) };
+      }else {
+        //TODO RETURN ERROR
       }
     },
     calculateNewPrice(selling_shares, owned_company) {
@@ -313,6 +319,22 @@ export default {
                 <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> ${{
                   share_price.toLocaleString()
                 }}</b>
+              </div>
+              <div v-if="share_movement == 2" class="company_data_element box">
+                <p>Price Movement</p>
+                <b class="green"><font-awesome-icon icon="fa-solid fa-arrow-up" /> {{
+                  getPercentage(company_historic)
+                }}%</b>
+              </div>
+              <div v-if="share_movement == 1" class="company_data_element box">
+                <p>Price Movement</p>
+                <b class="orange"><font-awesome-icon icon="fa-solid fa-minus" /> {{ getPercentage(company_historic) }}%</b>
+              </div>
+              <div v-if="share_movement == 0" class="company_data_element box">
+                <p>Price Movement</p>
+                <b class="red"><font-awesome-icon icon="fa-solid fa-arrow-down" /> {{
+                  getPercentage(company_historic)
+                }}%</b>
               </div>
               <div class="company_data_element box">
                 <p>Avariable Shares</p>
