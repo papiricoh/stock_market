@@ -89,6 +89,6 @@ export default {
 
 <template>
   <div>
-    <apexchart type="donut" width="380" :options="chartOptions" :series="series"></apexchart>
+    <apexchart type="donut" width="480" :options="chartOptions" :series="series"></apexchart>
   </div>
 </template>
