@@ -57,39 +57,47 @@ body {
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
+
 .menu-list a.is-active {
     background-color: rgb(67, 149, 255);
     color: #fff;
 }
+
 .button.is-link {
     margin-top: 1rem;
     background-color: rgb(67, 149, 255);
     border-color: transparent;
     color: #fff;
 }
+
 .button.is-link:hover {
     background-color: rgba(67, 149, 255, 0.801);
 }
+
 .button.is-info {
     background-color: rgb(67, 149, 255);
     border-color: transparent;
     color: #fff;
 }
+
 .button.is-info:hover {
     background-color: rgba(67, 149, 255, 0.801);
 }
+
 .button.is-danger {
-    transition:500ms;
+    transition: 500ms;
     background-color: #4e4e4e77;
     border-color: transparent;
     color: #fff;
 }
+
 .button.is-success {
     background-color: #48c78e;
     border-color: transparent;
     color: #fff;
-    transition:400ms;
+    transition: 400ms;
 }
+
 .button.is-success:hover {
     transition: 200ms;
     background-color: #000000;
@@ -109,6 +117,7 @@ body {
 .a30-text {
     font-size: 30px;
 }
+
 .a20-text {
     font-size: 20px;
 }
@@ -116,24 +125,27 @@ body {
 .buy-sell>* {
     margin: 10px;
 }
-.title{
+
+.title {
     margin-top: 2rem;
     text-transform: uppercase;
     font-weight: bolder;
 }
-.newstitle{
+
+.newstitle {
     font-weight: 500;
     padding-bottom: 1rem;
     border-bottom: solid rgba(67, 149, 255, 0.452);
     border-radius: 1rem;
 }
+
 .creation_screen {
     padding: 40px;
 }
 
 .patrimony_view {
     margin-left: 12px;
-    width: 32rem;
+    min-width: 38rem;
 }
 
 .creation_screen_box {
@@ -143,7 +155,8 @@ body {
     align-items: center;
     justify-content: center;
 }
-.contenedornews{
+
+.contenedornews {
     margin-top: 2rem;
     display: flex;
     flex-direction: column;
@@ -151,9 +164,10 @@ body {
     border-radius: .6rem;
     padding: 2rem;
 }
+
 .news {
     font-weight: 300;
-    background: radial-gradient(circle, rgba(0,228,255,0.1) 3%, rgba(0,155,255,0.2) 100%);
+    background: radial-gradient(circle, rgba(0, 228, 255, 0.1) 3%, rgba(0, 155, 255, 0.2) 100%);
     border-radius: .6rem;
     padding: 5%;
     font-size: large;
