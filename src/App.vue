@@ -25,10 +25,12 @@ export default {
       company_historic: [],
       company_shares: [],
 
+      //Market Buying/Selling screen
+      buying_error_mesage: "",
+
       //Market Form
-      order_type: "ot",
+      order_type: "Buy", 
       market_form_number_of_shares: 1,
-      market_form_share_price: 0,
 
 
       //COMPANY FORM
@@ -54,7 +56,7 @@ export default {
 
       companies: [
         { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
-        { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 120000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 32000, owner_shares: 50000, bought_shares: 18000 },
+        { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 100000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 32000, owner_shares: 50000, bought_shares: 18000 },
         { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
         { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 67980, 48520, 20000, 45000, 54100, 56000, 10240, 14570, 21300, 20300, 12030], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
         { label: 'HUE', name: "Helios United Emporium", total_shares: 1000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 }
@@ -128,6 +130,13 @@ export default {
         historic[historic.length] = new_price;
       }
       return historic;
+    },
+    addSharePriceToCompany(label, price) {
+      for (let index = 0; index < this.companies.length; index++) {
+        if(this.companies[index].label == label) {
+          this.companies[index].historic = this.addSharePrice(this.companies[index].historic, Number(price));
+        }
+      }
     },
     companyManagerSellShares(company_manager_slider) {
       let selling_all = false;
@@ -210,6 +219,70 @@ export default {
     calculateNewPrice(selling_shares, owned_company) {
       let percentage = selling_shares / owned_company.total_shares;
       return (owned_company.historic[owned_company.historic.length - 1] - (owned_company.historic[owned_company.historic.length - 1] * percentage)).toFixed(2);
+    },
+    has_buyed_shares(label) {
+      for (let index = 0; index < this.shares.length; index++) {
+        if(this.shares[index].label == label) {
+          return index;
+        }
+      }
+      return -1;
+    },
+    editSharesGraph(number, type, company) {
+      let companyIndex = this.getCompanyIndex(company.label);
+      //TYPE true = add sold shares
+      if(type == true) {
+        this.companies[companyIndex] = { label: company.label, name: company.name, total_shares: company.total_shares, historic: company.historic, owner: company.owner, avariableShares: company.avariableShares - number, owner_shares: company.owner_shares, bought_shares: company.bought_shares + number };
+      }else {
+        if(type == true) {
+        this.companies[companyIndex] = { label: company.label, name: company.name, total_shares: company.total_shares, historic: company.historic, owner: company.owner, avariableShares: company.avariableShares + number, owner_shares: company.owner_shares, bought_shares: company.bought_shares - number };
+      }
+      }
+      //TYPE false = add free shares
+    },
+    buyShares(number_of_shares, company) {
+      var total_price = number_of_shares * company.historic[company.historic.length - 1];
+      
+      if(this.money < total_price) {
+        this.buying_error_mesage = "You dont have enough money, you need $" + (total_price - this.money) + " more";
+      }else {
+        this.money = this.money - total_price;
+        if(this.has_buyed_shares(company.label) != -1) {
+          let index = this.has_buyed_shares(company.label);
+          this.shares[index] = { label: company.label, cuantity: Number(Number(this.shares[index].cuantity) + Number(number_of_shares)), bought_at: company.historic[company.historic.length - 1] };
+        }else {
+          this.shares[this.shares.length] = { label: company.label, cuantity: number_of_shares, bought_at: company.historic[company.historic.length - 1] };
+        }
+        var percentage =  number_of_shares / company.total_shares;
+        var new_price = Number(Number(company.historic[company.historic.length - 1]) + Number(company.historic[company.historic.length - 1] * percentage));
+        this.share_price = new_price;
+        this.editSharesGraph(number_of_shares, true, company);
+        this.addSharePriceToCompany(company.label, new_price.toFixed(2));
+      }
+    },
+    getCompany(company_label) {
+      for (let index = 0; index < this.companies.length; index++) {
+        if(this.companies[index].label == company_label) {
+          return this.companies[index];
+        }
+      }
+      return null;
+    },
+    getCompanyIndex(company_label) {
+      for (let index = 0; index < this.companies.length; index++) {
+        if(this.companies[index].label == company_label) {
+          return index;
+        }
+      }
+      return -1;
+    },
+    buySell(number_of_shares, order_type, company_label) {
+      let company = this.getCompany(company_label);
+      if(order_type == 'Sell') {
+        //SELL METHOD
+      }else if(company.avariableShares - number_of_shares >= 0){
+        this.buyShares(number_of_shares, company);
+      }
     }
   }
 }
@@ -370,11 +443,11 @@ export default {
                       Buy
                     </label>
                     <label class="radio">
-                      <input type="radio" v-model="order_type" value="Sell" :value="sell">
+                      <input type="radio" v-model="order_type" value="Sell">
                       Sell
                     </label>
                     <br>
-                    <button class="button is-link">Submmit</button>
+                    <button class="button is-link" @click="buySell(market_form_number_of_shares, order_type, company_label)">Submmit</button>
                   </div>
                   <hr>
                   <div class="newtitle">
@@ -399,15 +472,25 @@ export default {
           <div class="wallet_flex">
             <div class="wallet_balance">
               <div>Wallet Money: <b>${{ money.toLocaleString() }}</b></div>
+              
             </div>
             <div class="wallet_shares">
-              <div v-if="has_company != -1"><b>{{ owned_company.label }}</b> - Owner of the {{
-              ((owned_company.owner_shares / owned_company.total_shares) * 100).toFixed(2) }}% of the company</div>
-              <ul v-for="share in shares">
-                <li><b>{{ share.label }}</b> - {{ share.cuantity.toLocaleString() }} shares bought at ${{
+              <table class="table is-bordered" >
+                <tr>
+                  <th>Company Label</th>
+                  <th>Number of held shares</th>
+                </tr>
+                <tr v-if="has_company != -1">
+                  <td><b>{{ owned_company.label }}</b></td>
+                  <td>Owner of the {{ ((owned_company.owner_shares / owned_company.total_shares) * 100).toFixed(2) }}% of the company</td>
+                </tr>
+                <tr v-for="share in shares">
+                  <td><b>{{ share.label }}</b></td>
+                  <td>{{ share.cuantity.toLocaleString() }} shares bought at ${{
                   share.bought_at.toLocaleString()
-                }}</li>
-              </ul>
+                }}</td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
