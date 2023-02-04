@@ -55,7 +55,7 @@ export default {
       ],
 
       companies: [
-        { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
+        { label: 'LSEI', name: "Los Santos Economic Index", total_shares: 1200000, historic: [14500, 14230, 14645, 14562, 14856, 14952, 14751, 15230], owner: "NPC", avariableShares: 400000, owner_shares: 0, bought_shares: 800000 },
         { label: 'PAPI', name: "Paramilitar Pillage Corporation", total_shares: 100000, historic: [145, 180, 190, 180, 152, 124, 253, 235, 256, 263], owner: "steam:000000001", avariableShares: 32000, owner_shares: 50000, bought_shares: 18000 },
         { label: 'RCKE', name: "Rockson Energy", total_shares: 10000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
         { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 67980, 48520, 20000, 45000, 54100, 56000, 10240, 14570, 21300, 20300, 12030], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
