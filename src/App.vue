@@ -12,7 +12,7 @@ export default {
       full_user_name: "John Doe",
       user_id: "steam:000000001",
       has_company: -1,
-      money: 90000,
+      money: 90000000,
 
       //Market Variables
       company_label: null,
@@ -26,7 +26,7 @@ export default {
       company_shares: [],
 
       //Market Buying/Selling screen
-      buying_error_mesage: "",
+      buying_error_mesage: null,
 
       //Market Form
       order_type: "Buy", 
@@ -228,23 +228,27 @@ export default {
       }
       return -1;
     },
+    number_of_buyed_shares(label) {
+      let sharesIndex = this.has_buyed_shares(label);
+      if(sharesIndex != -1) {
+        return this.shares[sharesIndex].cuantity;
+      }
+      return 0;
+    },
     editSharesGraph(number, type, company) {
       let companyIndex = this.getCompanyIndex(company.label);
       //TYPE true = add sold shares
       if(type == true) {
         this.companies[companyIndex] = { label: company.label, name: company.name, total_shares: company.total_shares, historic: company.historic, owner: company.owner, avariableShares: company.avariableShares - number, owner_shares: company.owner_shares, bought_shares: company.bought_shares + number };
       }else {
-        if(type == true) {
         this.companies[companyIndex] = { label: company.label, name: company.name, total_shares: company.total_shares, historic: company.historic, owner: company.owner, avariableShares: company.avariableShares + number, owner_shares: company.owner_shares, bought_shares: company.bought_shares - number };
-      }
       }
       //TYPE false = add free shares
     },
     buyShares(number_of_shares, company) {
       var total_price = number_of_shares * company.historic[company.historic.length - 1];
-      
       if(this.money < total_price) {
-        this.buying_error_mesage = "You dont have enough money, you need $" + (total_price - this.money) + " more";
+        this.buying_error_mesage = "You dont have enough money, you need $" + (total_price - this.money).toLocaleString() + " more";
       }else {
         this.money = this.money - total_price;
         if(this.has_buyed_shares(company.label) != -1) {
@@ -276,12 +280,32 @@ export default {
       }
       return -1;
     },
+    sellShares(amount, company) {
+      let has_buyed_shares = this.has_buyed_shares(company.label);
+      if(has_buyed_shares != -1 && this.shares[has_buyed_shares].cuantity >= amount) {
+        var percentage =  amount / company.total_shares;
+        var new_price = Number(Number(company.historic[company.historic.length - 1]) - Number(company.historic[company.historic.length - 1] * percentage));
+        this.editSharesGraph(amount, false, company);
+        this.money = Number(Number(this.money) + Number(amount * company.historic[company.historic.length - 1]));
+        this.addSharePriceToCompany(company.label, new_price.toFixed(2));
+        if(this.shares[has_buyed_shares].cuantity == amount) {
+          this.shares.splice(has_buyed_shares, 1);
+        }else {
+          this.shares[has_buyed_shares].cuantity = this.shares[has_buyed_shares].cuantity - amount;
+        }
+      }else {
+        this.buying_error_mesage = "The value of shares you have entered surpases the shares you own";
+      }
+
+    },
     buySell(number_of_shares, order_type, company_label) {
       let company = this.getCompany(company_label);
       if(order_type == 'Sell') {
-        //SELL METHOD
+        this.sellShares(number_of_shares, company);
       }else if(company.avariableShares - number_of_shares >= 0){
         this.buyShares(number_of_shares, company);
+      }else {
+        this.buying_error_mesage = "The value of shares you have entered surpases the avariable/owned shares";
       }
     }
   }
@@ -359,14 +383,14 @@ export default {
             <ul class="menu-list" v-for="company in companies">
               <div v-if="company_label != company.label">
                 <li><a
-                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), company_historic = company.historic, company_shares = [company.owner_shares, company.avariableShares, company.bought_shares]">{{
+                    @click="order_type = 'Buy', company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), company_historic = company.historic, company_shares = [company.owner_shares, company.avariableShares, company.bought_shares], buying_error_mesage = null">{{
                       company.label
                     }}</a>
                 </li>
               </div>
               <div v-if="company_label == company.label">
                 <li><a class="is-active"
-                    @click="company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), company_historic = company.historic">{{
+                    @click="order_type = 'Buy', company_label = company.label, (company_name = company.name), (share_price = company.historic[company.historic.length - 1]), (avariable_shares = company.avariableShares), (num_of_shares = company.total_shares), calculateMarketCap(company.historic[company.historic.length - 1], company.total_shares), checkChange(company.historic), company_historic = company.historic, buying_error_mesage = null">{{
                       company.label
                     }}</a></li>
               </div>
@@ -434,7 +458,7 @@ export default {
               <div class="box movement_options">
                 <div class="buy-sell">
                   <b class="a30-text">Buy/Sell</b>
-                  <p>Number of Shares:</p>
+                  <p>Number of Shares: you own {{ number_of_buyed_shares(company_label) }} shares</p>
                   <input v-model.number="market_form_number_of_shares" class="input" type="text"
                     placeholder="Number of Shares">
                   <div class="control">
@@ -447,6 +471,7 @@ export default {
                       Sell
                     </label>
                     <br>
+                    <p v-if="buying_error_mesage != null" class="red">{{ buying_error_mesage }}</p>
                     <button class="button is-link" @click="buySell(market_form_number_of_shares, order_type, company_label)">Submmit</button>
                   </div>
                   <hr>
