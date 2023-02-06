@@ -31,7 +31,8 @@ export default {
     }
   },
   props: {
-    series: Array
+    series: Array,
+    options: Object
   },
   methods: {
     updateChart(data) {
