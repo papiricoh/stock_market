@@ -13,6 +13,7 @@ export default {
       user_id: "steam:000000001",
       has_company: -1,
       money: 90000000,
+      personal_stats: [12, 6],
 
       //Market Variables
       company_label: null,
@@ -29,7 +30,7 @@ export default {
       buying_error_mesage: null,
 
       //Market Form
-      order_type: "Buy", 
+      order_type: "Buy",
       market_form_number_of_shares: 1,
 
 
@@ -133,7 +134,7 @@ export default {
     },
     addSharePriceToCompany(label, price) {
       for (let index = 0; index < this.companies.length; index++) {
-        if(this.companies[index].label == label) {
+        if (this.companies[index].label == label) {
           this.companies[index].historic = this.addSharePrice(this.companies[index].historic, Number(price));
         }
       }
@@ -212,7 +213,7 @@ export default {
         }
         let sell_shares = Number(Number(free_shares) * Number(percentage));
         this.companies[this.companies.length] = { label: this.form_company_label, name: this.form_company_name, total_shares: Number(totalCompanyShares), historic: [1, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price, this.input_share_price], owner: this.user_id, avariableShares: free_shares - sell_shares.toFixed(0), owner_shares: this.input_number_of_shares - this.slider_position, bought_shares: Number(sell_shares.toFixed(0)) };
-      }else {
+      } else {
         //TODO RETURN ERROR
       }
     },
@@ -222,7 +223,7 @@ export default {
     },
     has_buyed_shares(label) {
       for (let index = 0; index < this.shares.length; index++) {
-        if(this.shares[index].label == label) {
+        if (this.shares[index].label == label) {
           return index;
         }
       }
@@ -230,7 +231,7 @@ export default {
     },
     number_of_buyed_shares(label) {
       let sharesIndex = this.has_buyed_shares(label);
-      if(sharesIndex != -1) {
+      if (sharesIndex != -1) {
         return this.shares[sharesIndex].cuantity;
       }
       return 0;
@@ -238,26 +239,26 @@ export default {
     editSharesGraph(number, type, company) {
       let companyIndex = this.getCompanyIndex(company.label);
       //TYPE true = add sold shares
-      if(type == true) {
+      if (type == true) {
         this.companies[companyIndex] = { label: company.label, name: company.name, total_shares: company.total_shares, historic: company.historic, owner: company.owner, avariableShares: company.avariableShares - number, owner_shares: company.owner_shares, bought_shares: company.bought_shares + number };
-      }else {
+      } else {
         this.companies[companyIndex] = { label: company.label, name: company.name, total_shares: company.total_shares, historic: company.historic, owner: company.owner, avariableShares: company.avariableShares + number, owner_shares: company.owner_shares, bought_shares: company.bought_shares - number };
       }
       //TYPE false = add free shares
     },
     buyShares(number_of_shares, company) {
       var total_price = number_of_shares * company.historic[company.historic.length - 1];
-      if(this.money < total_price) {
+      if (this.money < total_price) {
         this.buying_error_mesage = "You dont have enough money, you need $" + (total_price - this.money).toLocaleString() + " more";
-      }else {
+      } else {
         this.money = this.money - total_price;
-        if(this.has_buyed_shares(company.label) != -1) {
+        if (this.has_buyed_shares(company.label) != -1) {
           let index = this.has_buyed_shares(company.label);
           this.shares[index] = { label: company.label, cuantity: Number(Number(this.shares[index].cuantity) + Number(number_of_shares)), bought_at: company.historic[company.historic.length - 1] };
-        }else {
+        } else {
           this.shares[this.shares.length] = { label: company.label, cuantity: number_of_shares, bought_at: company.historic[company.historic.length - 1] };
         }
-        var percentage =  number_of_shares / company.total_shares;
+        var percentage = number_of_shares / company.total_shares;
         var new_price = Number(Number(company.historic[company.historic.length - 1]) + Number(company.historic[company.historic.length - 1] * percentage));
         this.share_price = new_price;
         this.editSharesGraph(number_of_shares, true, company);
@@ -266,7 +267,7 @@ export default {
     },
     getCompany(company_label) {
       for (let index = 0; index < this.companies.length; index++) {
-        if(this.companies[index].label == company_label) {
+        if (this.companies[index].label == company_label) {
           return this.companies[index];
         }
       }
@@ -274,7 +275,7 @@ export default {
     },
     getCompanyIndex(company_label) {
       for (let index = 0; index < this.companies.length; index++) {
-        if(this.companies[index].label == company_label) {
+        if (this.companies[index].label == company_label) {
           return index;
         }
       }
@@ -282,29 +283,29 @@ export default {
     },
     sellShares(amount, company) {
       let has_buyed_shares = this.has_buyed_shares(company.label);
-      if(has_buyed_shares != -1 && this.shares[has_buyed_shares].cuantity >= amount) {
-        var percentage =  amount / company.total_shares;
+      if (has_buyed_shares != -1 && this.shares[has_buyed_shares].cuantity >= amount) {
+        var percentage = amount / company.total_shares;
         var new_price = Number(Number(company.historic[company.historic.length - 1]) - Number(company.historic[company.historic.length - 1] * percentage));
         this.editSharesGraph(amount, false, company);
         this.money = Number(Number(this.money) + Number(amount * company.historic[company.historic.length - 1]));
         this.addSharePriceToCompany(company.label, new_price.toFixed(2));
-        if(this.shares[has_buyed_shares].cuantity == amount) {
+        if (this.shares[has_buyed_shares].cuantity == amount) {
           this.shares.splice(has_buyed_shares, 1);
-        }else {
+        } else {
           this.shares[has_buyed_shares].cuantity = this.shares[has_buyed_shares].cuantity - amount;
         }
-      }else {
+      } else {
         this.buying_error_mesage = "The value of shares you have entered surpases the shares you own";
       }
 
     },
     buySell(number_of_shares, order_type, company_label) {
       let company = this.getCompany(company_label);
-      if(order_type == 'Sell') {
+      if (order_type == 'Sell') {
         this.sellShares(number_of_shares, company);
-      }else if(company.avariableShares - number_of_shares >= 0){
+      } else if (company.avariableShares - number_of_shares >= 0) {
         this.buyShares(number_of_shares, company);
-      }else {
+      } else {
         this.buying_error_mesage = "The value of shares you have entered surpases the avariable/owned shares";
       }
     }
@@ -367,7 +368,12 @@ export default {
       </ul>
     </div>
     <div id="home" v-if="page == 'home'">
-
+      <div class="creation_screen_box">
+        <div class="box">
+          <div class="title">San Andreas Stock Market</div>
+          <div>Wellcome to the san andreas stock market</div>
+        </div>
+      </div>
     </div>
     <div id="markets" v-if="page == 'markets'">
       <div class="markets_header">
@@ -425,7 +431,9 @@ export default {
               </div>
               <div v-if="share_movement == 1" class="company_data_element box">
                 <p>Price Movement</p>
-                <b class="orange"><font-awesome-icon icon="fa-solid fa-minus" /> {{ getPercentage(company_historic) }}%</b>
+                <b class="orange"><font-awesome-icon icon="fa-solid fa-minus" /> {{
+                  getPercentage(company_historic)
+                }}%</b>
               </div>
               <div v-if="share_movement == 0" class="company_data_element box">
                 <p>Price Movement</p>
@@ -472,7 +480,8 @@ export default {
                     </label>
                     <br>
                     <p v-if="buying_error_mesage != null" class="red">{{ buying_error_mesage }}</p>
-                    <button class="button is-link" @click="buySell(market_form_number_of_shares, order_type, company_label)">Submmit</button>
+                    <button class="button is-link"
+                      @click="buySell(market_form_number_of_shares, order_type, company_label)">Submmit</button>
                   </div>
                   <hr>
                   <div class="newtitle">
@@ -497,23 +506,24 @@ export default {
           <div class="wallet_flex">
             <div class="wallet_balance">
               <div>Wallet Money: <b>${{ money.toLocaleString() }}</b></div>
-              
+
             </div>
             <div class="wallet_shares">
-              <table class="table is-bordered" >
+              <table class="table is-bordered">
                 <tr>
                   <th>Company Label</th>
                   <th>Number of held shares</th>
                 </tr>
                 <tr v-if="has_company != -1">
                   <td><b>{{ owned_company.label }}</b></td>
-                  <td>Owner of the {{ ((owned_company.owner_shares / owned_company.total_shares) * 100).toFixed(2) }}% of the company</td>
+                  <td>Owner of the {{ ((owned_company.owner_shares / owned_company.total_shares) * 100).toFixed(2) }}%
+                    of the company</td>
                 </tr>
                 <tr v-for="share in shares">
                   <td><b>{{ share.label }}</b></td>
                   <td>{{ share.cuantity.toLocaleString() }} shares bought at ${{
-                  share.bought_at.toLocaleString()
-                }}</td>
+                    share.bought_at.toLocaleString()
+                  }}</td>
                 </tr>
               </table>
             </div>
