@@ -7,7 +7,7 @@ export default {
                     show: false
                 },
                 chart: {
-                    height: 350,
+                    minHeight: 350,
                     type: 'treemap',
                     toolbar: {
                         autoSelected: 'pan',
@@ -56,6 +56,6 @@ export default {
 
 <template>
     <div id="chart">
-        <apexchart type="treemap" height="350" :options="chartOptions" :series="series"></apexchart>
+        <apexchart width="600" type="treemap" :options="chartOptions" :series="series"></apexchart>
     </div>
 </template>

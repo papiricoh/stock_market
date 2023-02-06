@@ -381,8 +381,10 @@ export default {
         <div class="box">
           <div class="title">San Andreas Stock Market</div>
           <div>Wellcome to the san andreas stock market</div>
-          <div>All markets:</div>
-          <MultiDimensional :series="[{ name: 'Markets', data: generateMultiData() }]"></MultiDimensional>
+          <div>All markets change percentage:</div>
+          <div class="multidimensional_container">
+            <MultiDimensional :series="[{ name: 'Markets', data: generateMultiData() }]"></MultiDimensional>
+          </div>
         </div>
       </div>
     </div>
