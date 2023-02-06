@@ -10,6 +10,9 @@ export default {
             autoSelected: 'pan',
             show: false
           },
+          zoom: {
+            enabled: false
+          },
         },
         noData: {
           text: 'Loading...'
