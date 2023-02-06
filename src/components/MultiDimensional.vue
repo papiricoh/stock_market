@@ -12,7 +12,7 @@ export default {
                     toolbar: {
                         autoSelected: 'pan',
                         show: false
-                    }
+                    },
                 },
                 dataLabels: {
                     enabled: true,

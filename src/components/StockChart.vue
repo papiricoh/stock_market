@@ -9,7 +9,10 @@ export default {
           toolbar: {
             autoSelected: 'pan',
             show: false
-          }
+          },
+        },
+        noData: {
+          text: 'Loading...'
         },
         dataLabels: {
           enabled: false
@@ -20,7 +23,7 @@ export default {
       },
       series: [{
         name: 'Share Price',
-        data: [1]
+        data: [1],
       }]
     }
   },

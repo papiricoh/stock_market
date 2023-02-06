@@ -314,7 +314,7 @@ export default {
     generateMultiData() {
       let array = [];
       for (let index = 0; index < this.companies.length; index++) {
-        array[array.length] = { x: this.companies[index].label, y: this.getPercentage(this.companies[index].historic) };
+        array[array.length] = { x: this.companies[index].label, y: this.getPercentage(this.companies[index].historic) + "%" };
       }
       return array;
     }
