@@ -62,7 +62,7 @@ export default {
         { label: 'RCKE', name: "Rockson Energy", total_shares: 1000, historic: [2100, 2900, 6798, 12000, 17992, 24310, 32000, 25000, 22000, 20000], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
         { label: 'KIA', name: "Kiamoto Industry Agency", total_shares: 1000, historic: [2100, 2900, 6798, 4852, 2000, 4500, 5410, 5600, 1024, 1457, 2130, 2030, 1203, 67980, 48520, 20000, 45000, 54100, 56000, 10240, 14570, 21300, 20300, 12030], owner: "NPC", avariableShares: 9000, owner_shares: 100, bought_shares: 12000 },
         { label: 'HUE', name: "Helios United Emporium", total_shares: 10000, historic: [324, 461, 726, 124, 652, 624, 236, 426, 673, 123], owner: "NPC", avariableShares: 9000, owner_shares: 1000, bought_shares: 12000 },
-        { label: 'WYNE', name: "Wayne Enterprises", total_shares: 100000, historic: [1200, 1300, 14200, 15300, 16900, 17832, 18902, 19302, 20190, 24500], owner: "NPC", avariableShares: 10000, owner_shares: 60000, bought_shares: 30000 }
+        { label: 'WYNE', name: "Wayne Enterprises", total_shares: 100000, historic: [1200, 1300, 14200, 15300, 16900, 17832, 18902, 19302, 20190, 24500, 32000], owner: "NPC", avariableShares: 10000, owner_shares: 60000, bought_shares: 30000 }
       ]
     }
   },
